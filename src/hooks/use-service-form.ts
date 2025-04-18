@@ -91,6 +91,9 @@ export const useServiceForm = (
         image_url
       };
       
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      
       if (initialData?.id) {
         // Update existing service
         const { error } = await supabase
@@ -103,7 +106,7 @@ export const useServiceForm = (
           
         if (error) throw error;
       } else {
-        // Create new service
+        // Create new service with all required fields
         const { error } = await supabase
           .from('services')
           .insert([{

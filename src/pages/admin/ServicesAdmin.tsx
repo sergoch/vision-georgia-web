@@ -49,7 +49,9 @@ const ServicesAdminContent = () => {
   });
 
   const handleEdit = (service: any) => {
-    setSelectedService(service);
+    // Make a deep copy to avoid reference issues
+    const serviceCopy = JSON.parse(JSON.stringify(service));
+    setSelectedService(serviceCopy);
     setIsFormOpen(true);
   };
 
@@ -66,12 +68,12 @@ const ServicesAdminContent = () => {
       
       if (serviceToDelete.image_url) {
         // Extract filename from URL
-        const imagePath = serviceToDelete.image_url.split('/').pop();
-        if (imagePath) {
-          await supabase.storage
-            .from('site-images')
-            .remove([`services/${imagePath}`]);
-        }
+        const urlParts = serviceToDelete.image_url.split('/');
+        const imagePath = `services/${urlParts[urlParts.length - 1]}`;
+        
+        await supabase.storage
+          .from('site-images')
+          .remove([imagePath]);
       }
       
       toast({
