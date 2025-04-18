@@ -13,9 +13,10 @@ import { Loader2 } from 'lucide-react';
 interface TeamMemberFormProps {
   initialData?: any;
   onSuccess: () => void;
+  onCancel?: () => void;
 }
 
-const TeamMemberForm = ({ initialData, onSuccess }: TeamMemberFormProps) => {
+const TeamMemberForm = ({ initialData, onSuccess, onCancel }: TeamMemberFormProps) => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: initialData || {
       name_en: '',
@@ -234,13 +235,20 @@ const TeamMemberForm = ({ initialData, onSuccess }: TeamMemberFormProps) => {
         )}
       </div>
       
-      <Button type="submit" disabled={loading}>
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {initialData 
-          ? (isGeorgian ? 'განახლება' : 'Update') 
-          : (isGeorgian ? 'დამატება' : 'Add')
-        }
-      </Button>
+      <div className="flex space-x-3 justify-end">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            {isGeorgian ? 'გაუქმება' : 'Cancel'}
+          </Button>
+        )}
+        <Button type="submit" disabled={loading}>
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {initialData 
+            ? (isGeorgian ? 'განახლება' : 'Update') 
+            : (isGeorgian ? 'დამატება' : 'Add')
+          }
+        </Button>
+      </div>
     </form>
   );
 };
