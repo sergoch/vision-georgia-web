@@ -19,6 +19,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/admin/Dashboard";
 import ProjectsAdmin from "./pages/admin/ProjectsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
+import PagesAdmin from "./pages/admin/PagesAdmin";
 
 const queryClient = new QueryClient();
 
