@@ -27,7 +27,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ServiceForm from '@/components/admin/services/ServiceForm';
 
-const ServicesAdminContent = () => {
+const ServicesAdmin = () => {
   const { isGeorgian } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
@@ -266,14 +266,6 @@ const ServicesAdminContent = () => {
         </AlertDialog>
       </div>
     </AdminLayout>
-  );
-};
-
-const ServicesAdmin = () => {
-  return (
-    <LanguageProvider>
-      <ServicesAdminContent />
-    </LanguageProvider>
   );
 };
 
