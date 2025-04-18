@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
-import { LayoutDashboard, FileText, Settings, Briefcase, LogOut, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Briefcase, LogOut, Users, BookOpen } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +43,14 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   <a href="/admin" className="w-full">
                     <LayoutDashboard />
                     <span>{isGeorgian ? 'მთავარი' : 'Dashboard'}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/admin/about" className="w-full">
+                    <BookOpen />
+                    <span>{isGeorgian ? 'ჩვენს შესახებ' : 'About'}</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

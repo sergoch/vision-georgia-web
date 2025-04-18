@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/admin/Dashboard";
+import AboutAdmin from "./pages/admin/AboutAdmin";
 import ProjectsAdmin from "./pages/admin/ProjectsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
 import PagesAdmin from "./pages/admin/PagesAdmin";
@@ -51,6 +51,7 @@ const App = () => (
 
           {/* Admin routes */}
           <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/admin/about" element={<ProtectedRoute><AboutAdmin /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute><ProjectsAdmin /></ProtectedRoute>} />
           <Route path="/admin/services" element={<ProtectedRoute><ServicesAdmin /></ProtectedRoute>} />
           <Route path="/admin/pages" element={<ProtectedRoute><PagesAdmin /></ProtectedRoute>} />

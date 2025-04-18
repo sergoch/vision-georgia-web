@@ -9,6 +9,27 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      about_page: {
+        Row: {
+          content_en: Json
+          content_ka: Json
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          content_en: Json
+          content_ka: Json
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          content_en?: Json
+          content_ka?: Json
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           content_en: string

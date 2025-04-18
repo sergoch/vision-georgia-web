@@ -1,42 +1,38 @@
+
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-
-// Hard-coded content to avoid syntax errors
-const georgianContent = {
-  paragraph1: 'შპს „რეალ ვიჟენი" არის პროფესიული საინჟინრო და გეოდეზიური კომპანია, რომელიც დაფუძნებულია ბათუმში.',
-  paragraph2: 'ჩვენი გუნდი შედგება გამოცდილი ინჟინრებისა და გეოდეზისტებისგან, რომლებსაც აქვთ მრავალწლიანი გამოცდილება სხვადასხვა ტიპის პროექტებში.',
-  paragraph3: 'ჩვენი მიზანია დავეხმაროთ კლიენტებს მიიღონ ზუსტი მონაცემები და ინფორმაცია, რომელიც მათ ესაჭიროებათ.',
-  paragraph4: 'შპს „რეალ ვიჟენი" მუშაობს როგორც კერძო, ისე სახელმწიფო სექტორის კლიენტებთან, მათ შორის დეველოპერებთან და არქიტექტორებთან.',
-  quality: 'ჩვენთვის უმთავრესია უმაღლესი ხარისხის მონაცემების და სერვისების მიწოდება.',
-  innovation: 'ჩვენ ვიყენებთ უახლეს ტექნოლოგიებს და ინოვაციურ მიდგომებს.',
-  professionalism: 'ჩვენი გუნდი შედგება მაღალკვალიფიციური პროფესიონალებისგან.',
-  timeliness: 'ჩვენ ვაფასებთ თქვენს დროს და ვუზრუნველყოფთ პროექტების დასრულებას დროულად.',
-  coreValues: 'ჩვენი ძირითადი ღირებულებები',
-  quality_title: 'ხარისხი და სიზუსტე',
-  innovation_title: 'ინოვაცია',
-  professionalism_title: 'პროფესიონალიზმი',
-  timeliness_title: 'დროულობა'
-};
-
-const englishContent = {
-  paragraph1: 'Real Vision LLC is a professional engineering and geodetic company based in Batumi, Georgia.',
-  paragraph2: 'Our team consists of experienced engineers and geodesists with many years of experience in various types of projects.',
-  paragraph3: 'Our goal is to help clients obtain accurate data and information they need for effective decision-making.',
-  paragraph4: 'Real Vision LLC works with both private and public sector clients, including developers, architects, and construction companies.',
-  quality: 'We prioritize delivering the highest quality data and services.',
-  innovation: 'We use the latest technologies and innovative approaches.',
-  professionalism: 'Our team consists of highly qualified professionals.',
-  timeliness: 'We value your time and ensure projects are completed on schedule.',
-  coreValues: 'Our Core Values',
-  quality_title: 'Quality and Precision',
-  innovation_title: 'Innovation',
-  professionalism_title: 'Professionalism',
-  timeliness_title: 'Timeliness'
-};
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const About: React.FC = () => {
   const { t, isGeorgian } = useLanguage();
-  const content = isGeorgian ? georgianContent : englishContent;
+
+  const { data: aboutData, isLoading } = useQuery({
+    queryKey: ['about-page'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('about_page')
+        .select('*')
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="pt-24 pb-16 bg-rvision-blue min-h-screen">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div>{isGeorgian ? 'იტვირთება...' : 'Loading...'}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const content = isGeorgian ? aboutData?.content_ka : aboutData?.content_en;
 
   return (
     <div className="pt-24 pb-16 bg-rvision-blue min-h-screen">
@@ -57,17 +53,17 @@ const About: React.FC = () => {
             <div className="border-t border-white/10 my-8"></div>
             
             <div className="space-y-6 text-gray-300">
-              <p>{content.paragraph1}</p>
-              <p>{content.paragraph2}</p>
-              <p>{content.paragraph3}</p>
-              <p>{content.paragraph4}</p>
+              <p>{content?.paragraph1}</p>
+              <p>{content?.paragraph2}</p>
+              <p>{content?.paragraph3}</p>
+              <p>{content?.paragraph4}</p>
             </div>
           </div>
 
           {/* Core Values */}
           <div className="bg-white/5 backdrop-blur-sm p-6 md:p-10 rounded-lg border border-white/10">
             <h2 className="text-2xl font-semibold text-white mb-8">
-              {content.coreValues}
+              {content?.coreValues}
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -78,10 +74,10 @@ const About: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
-                  {content.quality_title}
+                  {content?.quality_title}
                 </h3>
                 <p className="text-gray-300">
-                  {content.quality}
+                  {content?.quality}
                 </p>
               </div>
               
@@ -92,10 +88,10 @@ const About: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
-                  {content.innovation_title}
+                  {content?.innovation_title}
                 </h3>
                 <p className="text-gray-300">
-                  {content.innovation}
+                  {content?.innovation}
                 </p>
               </div>
               
@@ -106,10 +102,10 @@ const About: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
-                  {content.professionalism_title}
+                  {content?.professionalism_title}
                 </h3>
                 <p className="text-gray-300">
-                  {content.professionalism}
+                  {content?.professionalism}
                 </p>
               </div>
               
@@ -120,10 +116,10 @@ const About: React.FC = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-3">
-                  {content.timeliness_title}
+                  {content?.timeliness_title}
                 </h3>
                 <p className="text-gray-300">
-                  {content.timeliness}
+                  {content?.timeliness}
                 </p>
               </div>
             </div>
