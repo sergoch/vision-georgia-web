@@ -1,13 +1,14 @@
-
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Services: React.FC = () => {
   const { t, isGeorgian } = useLanguage();
 
   const services = [
     {
+      id: 'engineering-consulting',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-rvision-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -54,7 +55,7 @@ const Services: React.FC = () => {
     {
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-rvision-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
         </svg>
       ),
       title: isGeorgian ? 'გეოდატაბაზის ინტეგრაცია და სივრცითი მონაცემების ჰოსტინგი' : 'Geodatabase Integration & Spatial Data Hosting',
@@ -93,9 +94,12 @@ const Services: React.FC = () => {
                 <p className="text-gray-300 mb-6">
                   {service.description}
                 </p>
-                <a href="#" className="text-rvision-orange hover:underline flex items-center">
+                <Link 
+                  to={`/services/${service.id}`} 
+                  className="text-rvision-orange hover:underline flex items-center"
+                >
                   {isGeorgian ? "გაიგე მეტი" : "Learn more"} <ArrowRight className="ml-2" size={16} />
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -161,7 +165,7 @@ const Services: React.FC = () => {
                 </h3>
                 <p className="text-gray-300">
                   {isGeorgian 
-                    ? "საბოლოო შედეგების წარდგენა და მხარდაჭერა."
+                    ? "საბოლ��ო შედეგების წარდგენა და მხარდაჭერა."
                     : "Presenting final results and providing support."
                   }
                 </p>
