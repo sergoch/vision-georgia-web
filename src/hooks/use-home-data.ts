@@ -7,9 +7,17 @@ export const useHomeData = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['home-page'],
     queryFn: async () => {
-      const result = await fetchHomeData();
-      return result;
+      try {
+        console.log('Executing home page data query...');
+        const result = await fetchHomeData();
+        console.log('Query executed successfully:', result);
+        return result;
+      } catch (error) {
+        console.error('Error in useHomeData query:', error);
+        throw error;
+      }
     },
+    retry: 1, // Limit retries to avoid excessive error logs
   });
 
   return {
