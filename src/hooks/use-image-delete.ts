@@ -12,8 +12,17 @@ export const useImageDelete = () => {
       // Extract filename from URL
       const urlParts = imageUrl.split('/');
       const fileName = urlParts[urlParts.length - 1];
-      const bucketPath = urlParts[urlParts.length - 2];
-      const filePath = `${bucketPath}/${fileName}`;
+      let filePath;
+
+      // Check if the URL contains 'site-images' to determine the correct path
+      if (imageUrl.includes('site-images')) {
+        // For newer uploads where bucket name is in the URL
+        const bucketPath = urlParts[urlParts.length - 2];
+        filePath = `${bucketPath}/${fileName}`;
+      } else {
+        // For older uploads or different URL format
+        filePath = fileName;
+      }
       
       const { error } = await supabase.storage
         .from('site-images')

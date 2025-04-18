@@ -34,6 +34,7 @@ const HomeAdminContent = () => {
     projectImageFile,
     handleInputChange,
     handleImageChange,
+    handleImageDelete,
     handleSubmit,
   } = useHomeForm(homePageData);
 
@@ -58,6 +59,7 @@ const HomeAdminContent = () => {
             handleInputChange={handleInputChange}
             handleImageChange={handleImageChange}
             heroImageFile={heroImageFile}
+            onImageDelete={(imageType) => handleImageDelete(imageType)}
           />
 
           <ServicesSection
@@ -70,6 +72,7 @@ const HomeAdminContent = () => {
             handleInputChange={handleInputChange}
             handleImageChange={handleImageChange}
             projectImageFile={projectImageFile}
+            onImageDelete={(imageType) => handleImageDelete(imageType)}
           />
 
           <ContactSection
