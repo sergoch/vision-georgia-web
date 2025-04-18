@@ -1,13 +1,15 @@
+
 import React from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { HeroSection } from '@/components/home/HeroSection';
+import { ServicesSection } from '@/components/home/ServicesSection';
+import { ProjectsSection } from '@/components/home/ProjectsSection';
+import { ContactSection } from '@/components/home/ContactSection';
 
 const Home: React.FC = () => {
-  const { t, isGeorgian } = useLanguage();
+  const { isGeorgian } = useLanguage();
 
   const { data: homePageData, isLoading: isHomeLoading } = useQuery({
     queryKey: ['home-page'],
@@ -46,144 +48,10 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Hero Section */}
-      <section className="h-screen relative overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed z-0"
-          style={{ 
-            backgroundImage: homePageData?.hero_image_url 
-              ? `url('${homePageData.hero_image_url}')` 
-              : "url('https://images.unsplash.com/photo-1487887235947-a955ef187fcc?auto=format&fit=crop&w=1500')", 
-            backgroundSize: "cover",
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-rvision-blue/80 via-rvision-blue/70 to-rvision-blue"></div>
-        </div>
-
-        <div className="container mx-auto px-4 h-full flex items-center relative z-10 pt-20">
-          <div className="max-w-3xl animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              {isGeorgian ? homePageData?.hero_title_ka : homePageData?.hero_title_en}
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-10">
-              {isGeorgian ? homePageData?.hero_subtitle_ka : homePageData?.hero_subtitle_en}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Button 
-                asChild
-                className="bg-rvision-orange hover:bg-rvision-orange/90 text-white px-8 py-6"
-              >
-                <Link to="/services">
-                  {t('nav.services')}
-                </Link>
-              </Button>
-              <Button 
-                asChild
-                variant="outline" 
-                className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-6"
-              >
-                <Link to="/about">
-                  {t('home.learnMore')} <ArrowRight className="ml-2" size={16} />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Preview */}
-      <section className="py-20 bg-gradient-to-b from-rvision-blue to-rvision-blue/90">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-white text-center mb-16">
-            {isGeorgian ? homePageData?.services_title_ka : homePageData?.services_title_en}
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services?.map((service) => (
-              <div key={service.id} className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-all group">
-                <div className="w-16 h-16 bg-rvision-green/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-rvision-green/30 transition-colors">
-                  <img 
-                    src={service.image_url} 
-                    alt={isGeorgian ? service.title_ka : service.title_en}
-                    className="h-8 w-8 object-contain"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-3">
-                  {isGeorgian ? service.title_ka : service.title_en}
-                </h3>
-                <p className="text-gray-300 mb-6">
-                  {isGeorgian ? service.description_ka : service.description_en}
-                </p>
-                <Link to={`/services/${service.id}`} className="text-rvision-orange hover:underline flex items-center">
-                  {t('home.learnMore')} <ArrowRight className="ml-2" size={16} />
-                </Link>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center mt-16">
-            <Button 
-              asChild
-              className="bg-rvision-orange hover:bg-rvision-orange/90 text-white px-8"
-            >
-              <Link to="/services">
-                {t('nav.services')}
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Project Highlight */}
-      <section className="py-20 bg-rvision-blue/80">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            <div className="md:w-1/2">
-              <img 
-                src={homePageData?.projects_image_url || "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1500"} 
-                alt="GIS Project" 
-                className="rounded-lg shadow-xl w-full h-auto"
-              />
-            </div>
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                {isGeorgian ? homePageData?.projects_title_ka : homePageData?.projects_title_en}
-              </h2>
-              <p className="text-gray-300 mb-6">
-                {isGeorgian ? homePageData?.projects_description_ka : homePageData?.projects_description_en}
-              </p>
-              <Button 
-                asChild
-                className="bg-rvision-orange hover:bg-rvision-orange/90 text-white"
-              >
-                <Link to="/projects">
-                  {t('projects.title')}
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="py-20 bg-gradient-to-b from-rvision-blue/80 to-rvision-blue">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            {isGeorgian ? homePageData?.contact_title_ka : homePageData?.contact_title_en}
-          </h2>
-          <p className="text-gray-300 mb-10 max-w-2xl mx-auto">
-            {isGeorgian ? homePageData?.contact_description_ka : homePageData?.contact_description_en}
-          </p>
-          <Button 
-            asChild
-            className="bg-rvision-orange hover:bg-rvision-orange/90 text-white px-8 py-6"
-          >
-            <Link to="/contact">
-              {t('nav.contact')}
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <HeroSection heroData={homePageData} />
+      <ServicesSection services={services} sectionTitle={homePageData} />
+      <ProjectsSection projectData={homePageData} />
+      <ContactSection contactData={homePageData} />
     </div>
   );
 };
