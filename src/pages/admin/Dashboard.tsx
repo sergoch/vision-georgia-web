@@ -1,12 +1,15 @@
+
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import CeoInfoForm from '@/components/admin/ceo/CeoInfoForm';
 import AnalyticsSettings from '@/components/admin/analytics/AnalyticsSettings';
 import { useCeoInfo } from '@/hooks/use-ceo-info';
 import { useAnalyticsSettings } from '@/hooks/use-analytics-settings';
 import { Card } from '@/components/ui/card';
 
-const Dashboard = () => {
+// Create a separate component for the dashboard content
+// This will be wrapped with the LanguageProvider
+const DashboardContent = () => {
   const { isGeorgian } = useLanguage();
   const { ceoInfo, isLoading: isCeoLoading, handleUpdate: updateCeoInfo } = useCeoInfo();
   const { settings, updateSettings } = useAnalyticsSettings();
@@ -63,6 +66,15 @@ const Dashboard = () => {
         </div>
       </div>
     </AdminLayout>
+  );
+};
+
+// Main Dashboard component that provides the language context
+const Dashboard = () => {
+  return (
+    <LanguageProvider>
+      <DashboardContent />
+    </LanguageProvider>
   );
 };
 
