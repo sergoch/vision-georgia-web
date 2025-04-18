@@ -35,10 +35,10 @@ const ServicesAdminContent = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const { data: services, isLoading } = useQuery({
+  const { data: services, isLoading, error } = useQuery({
     queryKey: ['admin-services'],
     queryFn: async () => {
-      console.log('Fetching services');
+      console.log('Fetching services for admin panel');
       const { data, error } = await supabase
         .from('services')
         .select('*')
@@ -55,9 +55,7 @@ const ServicesAdminContent = () => {
 
   const handleEdit = (service: any) => {
     console.log('Editing service:', service);
-    // Make a deep copy to avoid reference issues
-    const serviceCopy = JSON.parse(JSON.stringify(service));
-    setSelectedService(serviceCopy);
+    setSelectedService(JSON.parse(JSON.stringify(service))); // Deep copy
     setIsFormOpen(true);
   };
 
@@ -85,7 +83,7 @@ const ServicesAdminContent = () => {
           const fileName = urlParts[urlParts.length - 1];
           const filePath = `services/${fileName}`;
           
-          console.log('Deleting image:', filePath);
+          console.log('Deleting image from storage:', filePath);
           
           const { error: storageError } = await supabase.storage
             .from('site-images')
@@ -124,13 +122,11 @@ const ServicesAdminContent = () => {
   };
 
   const handleFormClose = () => {
-    console.log('Form closed');
     setIsFormOpen(false);
     setSelectedService(null);
   };
 
   const handleOpenForm = () => {
-    console.log('Opening new service form');
     setSelectedService(null);
     setIsFormOpen(true);
   };
@@ -139,7 +135,28 @@ const ServicesAdminContent = () => {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-48">
-          <div className="text-lg">Loading services...</div>
+          <div className="text-lg">{isGeorgian ? 'სერვისები იტვირთება...' : 'Loading services...'}</div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="flex flex-col items-center justify-center h-48">
+          <div className="text-lg text-red-500 mb-2">
+            {isGeorgian ? 'შეცდომა მოხდა' : 'An error occurred'}
+          </div>
+          <div className="text-sm text-red-400">
+            {(error as Error).message}
+          </div>
+          <Button 
+            onClick={() => queryClient.invalidateQueries({ queryKey: ['admin-services'] })}
+            className="mt-4"
+          >
+            {isGeorgian ? 'ხელახლა ცდა' : 'Try Again'}
+          </Button>
         </div>
       </AdminLayout>
     );
@@ -162,6 +179,7 @@ const ServicesAdminContent = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>{isGeorgian ? 'სურათი' : 'Image'}</TableHead>
                 <TableHead>{isGeorgian ? 'სათაური' : 'Title'}</TableHead>
                 <TableHead>{isGeorgian ? 'აღწერა' : 'Description'}</TableHead>
                 <TableHead>{isGeorgian ? 'თარიღი' : 'Date'}</TableHead>
@@ -171,6 +189,19 @@ const ServicesAdminContent = () => {
             <TableBody>
               {services.map((service) => (
                 <TableRow key={service.id}>
+                  <TableCell>
+                    {service.image_url ? (
+                      <img 
+                        src={service.image_url} 
+                        alt={service.title_en}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400">
+                        N/A
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="font-medium">{isGeorgian ? service.title_ka : service.title_en}</TableCell>
                   <TableCell className="max-w-md truncate">{isGeorgian ? service.description_ka : service.description_en}</TableCell>
                   <TableCell>{new Date(service.created_at).toLocaleDateString()}</TableCell>
@@ -193,6 +224,14 @@ const ServicesAdminContent = () => {
             <p className="text-muted-foreground">
               {isGeorgian ? 'სერვისები არ მოიძებნა' : 'No services found'}
             </p>
+            <Button 
+              variant="outline" 
+              className="mt-4" 
+              onClick={handleOpenForm}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {isGeorgian ? 'დაამატეთ პირველი სერვისი' : 'Add your first service'}
+            </Button>
           </div>
         )}
 
