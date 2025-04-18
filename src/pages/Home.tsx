@@ -34,6 +34,14 @@ const Home: React.FC = () => {
       <ServicesSection services={services} sectionTitle={homePageData} />
       <ProjectsSection projectData={homePageData} />
       <ContactSection contactData={homePageData} />
+      <div className="mt-auto py-6 flex justify-center items-center">
+        <Link to="/auth">
+          <Button variant="outline" className="text-rvision-blue hover:bg-rvision-blue/10">
+            <LogIn className="mr-2 h-4 w-4" />
+            {isGeorgian ? 'შესვლა' : 'Login'}
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
