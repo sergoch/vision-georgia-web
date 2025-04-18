@@ -52,6 +52,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Custom colors for Real Vision LLC
+				rvision: {
+					blue: '#0B1F2F',
+					green: '#0F4C3A',
+					orange: '#FF6F00',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
