@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -30,7 +30,7 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {initialData 
+            {initialData?.id 
               ? (isGeorgian ? 'სერვისის რედაქტირება' : 'Edit Service')
               : (isGeorgian ? 'ახალი სერვისი' : 'New Service')
             }
@@ -59,7 +59,7 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
             </Button>
             <Button type="submit" disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {initialData 
+              {initialData?.id 
                 ? (isGeorgian ? 'განახლება' : 'Update') 
                 : (isGeorgian ? 'დამატება' : 'Add')
               }

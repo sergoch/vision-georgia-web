@@ -49,8 +49,7 @@ const ServicesAdminContent = () => {
   });
 
   const handleEdit = (service: any) => {
-    const serviceCopy = JSON.parse(JSON.stringify(service));
-    setSelectedService(serviceCopy);
+    setSelectedService(service);
     setIsFormOpen(true);
   };
 
@@ -66,6 +65,7 @@ const ServicesAdminContent = () => {
       if (error) throw error;
       
       if (serviceToDelete.image_url) {
+        // Extract filename from URL
         const imagePath = serviceToDelete.image_url.split('/').pop();
         if (imagePath) {
           await supabase.storage

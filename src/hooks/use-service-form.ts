@@ -28,12 +28,12 @@ export const useServiceForm = (
   
   const form = useForm<ServiceFormData>({
     defaultValues: {
-      title_en: '',
-      title_ka: '',
-      description_en: '',
-      description_ka: '',
-      full_description_en: '',
-      full_description_ka: ''
+      title_en: initialData?.title_en || '',
+      title_ka: initialData?.title_ka || '',
+      description_en: initialData?.description_en || '',
+      description_ka: initialData?.description_ka || '',
+      full_description_en: initialData?.full_description_en || '',
+      full_description_ka: initialData?.full_description_ka || ''
     }
   });
 
@@ -91,7 +91,7 @@ export const useServiceForm = (
         image_url
       };
       
-      if (initialData) {
+      if (initialData?.id) {
         // Update existing service
         const { error } = await supabase
           .from('services')
@@ -116,7 +116,7 @@ export const useServiceForm = (
       }
       
       toast({
-        description: initialData 
+        description: initialData?.id 
           ? (isGeorgian ? 'სერვისი წარმატებით განახლდა' : 'Service updated successfully') 
           : (isGeorgian ? 'სერვისი წარმატებით დაემატა' : 'Service added successfully')
       });
