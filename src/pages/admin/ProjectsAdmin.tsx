@@ -49,7 +49,9 @@ const ProjectsAdminContent = () => {
   });
 
   const handleEdit = (project: any) => {
-    setSelectedProject(project);
+    // Make a deep copy of the project to avoid reference issues
+    const projectCopy = JSON.parse(JSON.stringify(project));
+    setSelectedProject(projectCopy);
     setIsFormOpen(true);
   };
 
@@ -114,7 +116,10 @@ const ProjectsAdminContent = () => {
           <h1 className="text-3xl font-bold">
             {isGeorgian ? 'პროექტები' : 'Projects'}
           </h1>
-          <Button onClick={() => setIsFormOpen(true)}>
+          <Button onClick={() => {
+            setSelectedProject(null);
+            setIsFormOpen(true);
+          }}>
             <Plus className="mr-2 h-4 w-4" />
             {isGeorgian ? 'ახალი პროექტი' : 'New Project'}
           </Button>

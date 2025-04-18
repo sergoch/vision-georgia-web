@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,8 +8,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Loader2, CalendarIcon } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { format } from 'date-fns';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 interface ProjectFormProps {
   initialData?: any;
@@ -19,7 +27,7 @@ interface ProjectFormProps {
 }
 
 const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormProps) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm({
     defaultValues: initialData || {
       title_en: '',
       title_ka: '',
@@ -33,11 +41,33 @@ const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormPro
       completion_date: ''
     }
   });
+  
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || '');
+  const [completionDate, setCompletionDate] = useState<Date | undefined>(
+    initialData?.completion_date ? new Date(initialData.completion_date) : undefined
+  );
+  
   const { toast } = useToast();
   const { isGeorgian } = useLanguage();
+  
+  // Update form when initialData changes
+  useEffect(() => {
+    if (initialData) {
+      Object.keys(initialData).forEach((key) => {
+        setValue(key as any, initialData[key]);
+      });
+      
+      setImagePreview(initialData.image_url || '');
+      
+      if (initialData.completion_date) {
+        setCompletionDate(new Date(initialData.completion_date));
+      } else {
+        setCompletionDate(undefined);
+      }
+    }
+  }, [initialData, setValue]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -70,12 +100,18 @@ const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormPro
         image_url = publicUrl;
       }
       
+      // Format completion_date properly for database
+      const formattedData = {
+        ...data,
+        completion_date: completionDate ? completionDate.toISOString().split('T')[0] : null,
+        image_url
+      };
+      
       if (initialData) {
         const { error } = await supabase
           .from('projects')
           .update({
-            ...data,
-            image_url,
+            ...formattedData,
             updated_at: new Date().toISOString()
           })
           .eq('id', initialData.id);
@@ -85,8 +121,7 @@ const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormPro
         const { error } = await supabase
           .from('projects')
           .insert([{
-            ...data,
-            image_url,
+            ...formattedData,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           }]);
@@ -123,6 +158,11 @@ const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormPro
               : (isGeorgian ? 'ახალი პროექტი' : 'New Project')
             }
           </DialogTitle>
+          <DialogDescription>
+            {isGeorgian 
+              ? 'შეავსეთ ფორმა პროექტის დასამატებლად ან განსაახლებლად' 
+              : 'Fill out the form to add or update a project'}
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -230,11 +270,30 @@ const ProjectForm = ({ initialData, isOpen, onClose, onSuccess }: ProjectFormPro
 
             <div className="space-y-2">
               <Label htmlFor="completion_date">Completion Date</Label>
-              <Input 
-                id="completion_date"
-                type="date"
-                {...register('completion_date')}
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="completion_date"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !completionDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {completionDate ? format(completionDate, "PPP") : <span>{isGeorgian ? "აირჩიეთ თარიღი" : "Pick a date"}</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={completionDate}
+                    onSelect={setCompletionDate}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
           
