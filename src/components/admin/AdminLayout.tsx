@@ -1,3 +1,4 @@
+
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { 
@@ -9,7 +10,8 @@ import {
   Users, 
   BookOpen,
   Phone,
-  Home
+  Home,
+  FootprintsIcon
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,6 +55,14 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   <a href="/admin/home" className="w-full">
                     <Home />
                     <span>{isGeorgian ? 'მთავარი გვერდი' : 'Home Page'}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/admin/footer" className="w-full">
+                    <FootprintsIcon />
+                    <span>{isGeorgian ? 'ფუტერი' : 'Footer'}</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

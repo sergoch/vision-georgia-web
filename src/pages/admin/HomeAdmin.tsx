@@ -83,7 +83,7 @@ const HomeAdminContent = () => {
     e.preventDefault();
     
     try {
-      // Update the home page row (assuming only one row exists)
+      // Update the home page row (adding the WHERE clause to specify the row to update)
       const { error } = await supabase
         .from('home_page')
         .update({
@@ -104,6 +104,7 @@ const HomeAdminContent = () => {
           contact_description_en: formData.contact_description_en,
           contact_description_ka: formData.contact_description_ka,
         })
+        .eq('id', homePageData.id)  // Add WHERE clause to specify the row to update
         .select();
 
       if (error) throw error;

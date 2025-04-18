@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,6 +29,7 @@ import SpecialPagesAdmin from "./pages/admin/SpecialPagesAdmin";
 import TeamAdmin from "./pages/admin/TeamAdmin";
 import ContactAdmin from "./pages/admin/ContactAdmin";
 import HomeAdmin from "./pages/admin/HomeAdmin";
+import FooterAdmin from "./pages/admin/FooterAdmin";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,7 @@ const App = () => (
           <Route path="/admin/team" element={<ProtectedRoute><TeamAdmin /></ProtectedRoute>} />
           <Route path="/admin/contact" element={<ProtectedRoute><ContactAdmin /></ProtectedRoute>} />
           <Route path="/admin/home" element={<ProtectedRoute><HomeAdmin /></ProtectedRoute>} />
+          <Route path="/admin/footer" element={<ProtectedRoute><FooterAdmin /></ProtectedRoute>} />
           
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />
