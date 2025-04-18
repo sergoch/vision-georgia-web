@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
 
 const HomeAdminContent = () => {
   const { isGeorgian } = useLanguage();
@@ -146,36 +147,53 @@ const HomeAdminContent = () => {
               {isGeorgian ? 'გმირის სექცია' : 'Hero Section'}
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                name="hero_title_en"
-                label="Hero Title (English)"
-                value={formData.hero_title_en}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="hero_title_ka"
-                label="Hero Title (Georgian)"
-                value={formData.hero_title_ka}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="hero_subtitle_en"
-                placeholder="Hero Subtitle (English)"
-                value={formData.hero_subtitle_en}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="hero_subtitle_ka"
-                placeholder="Hero Subtitle (Georgian)"
-                value={formData.hero_subtitle_ka}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="hero_image_url"
-                label="Hero Image URL"
-                value={formData.hero_image_url}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="hero_title_en">Hero Title (English)</Label>
+                <Input
+                  id="hero_title_en"
+                  name="hero_title_en"
+                  value={formData.hero_title_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_title_ka">Hero Title (Georgian)</Label>
+                <Input
+                  id="hero_title_ka"
+                  name="hero_title_ka"
+                  value={formData.hero_title_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_subtitle_en">Hero Subtitle (English)</Label>
+                <Textarea
+                  id="hero_subtitle_en"
+                  name="hero_subtitle_en"
+                  placeholder="Hero Subtitle (English)"
+                  value={formData.hero_subtitle_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_subtitle_ka">Hero Subtitle (Georgian)</Label>
+                <Textarea
+                  id="hero_subtitle_ka"
+                  name="hero_subtitle_ka"
+                  placeholder="Hero Subtitle (Georgian)"
+                  value={formData.hero_subtitle_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hero_image_url">Hero Image URL</Label>
+                <Input
+                  id="hero_image_url"
+                  name="hero_image_url"
+                  value={formData.hero_image_url}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
           </div>
 
@@ -185,18 +203,24 @@ const HomeAdminContent = () => {
               {isGeorgian ? 'სერვისების სექცია' : 'Services Section'}
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                name="services_title_en"
-                label="Services Title (English)"
-                value={formData.services_title_en}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="services_title_ka"
-                label="Services Title (Georgian)"
-                value={formData.services_title_ka}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="services_title_en">Services Title (English)</Label>
+                <Input
+                  id="services_title_en"
+                  name="services_title_en"
+                  value={formData.services_title_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="services_title_ka">Services Title (Georgian)</Label>
+                <Input
+                  id="services_title_ka"
+                  name="services_title_ka"
+                  value={formData.services_title_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
           </div>
 
@@ -206,36 +230,53 @@ const HomeAdminContent = () => {
               {isGeorgian ? 'პროექტების სექცია' : 'Projects Section'}
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                name="projects_title_en"
-                label="Projects Title (English)"
-                value={formData.projects_title_en}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="projects_title_ka"
-                label="Projects Title (Georgian)"
-                value={formData.projects_title_ka}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="projects_description_en"
-                placeholder="Projects Description (English)"
-                value={formData.projects_description_en}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="projects_description_ka"
-                placeholder="Projects Description (Georgian)"
-                value={formData.projects_description_ka}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="projects_image_url"
-                label="Projects Image URL"
-                value={formData.projects_image_url}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="projects_title_en">Projects Title (English)</Label>
+                <Input
+                  id="projects_title_en"
+                  name="projects_title_en"
+                  value={formData.projects_title_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="projects_title_ka">Projects Title (Georgian)</Label>
+                <Input
+                  id="projects_title_ka"
+                  name="projects_title_ka"
+                  value={formData.projects_title_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="projects_description_en">Projects Description (English)</Label>
+                <Textarea
+                  id="projects_description_en"
+                  name="projects_description_en"
+                  placeholder="Projects Description (English)"
+                  value={formData.projects_description_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="projects_description_ka">Projects Description (Georgian)</Label>
+                <Textarea
+                  id="projects_description_ka"
+                  name="projects_description_ka"
+                  placeholder="Projects Description (Georgian)"
+                  value={formData.projects_description_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="projects_image_url">Projects Image URL</Label>
+                <Input
+                  id="projects_image_url"
+                  name="projects_image_url"
+                  value={formData.projects_image_url}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
           </div>
 
@@ -245,30 +286,44 @@ const HomeAdminContent = () => {
               {isGeorgian ? 'კონტაქტის სექცია' : 'Contact Section'}
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                name="contact_title_en"
-                label="Contact Title (English)"
-                value={formData.contact_title_en}
-                onChange={handleInputChange}
-              />
-              <Input
-                name="contact_title_ka"
-                label="Contact Title (Georgian)"
-                value={formData.contact_title_ka}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="contact_description_en"
-                placeholder="Contact Description (English)"
-                value={formData.contact_description_en}
-                onChange={handleInputChange}
-              />
-              <Textarea
-                name="contact_description_ka"
-                placeholder="Contact Description (Georgian)"
-                value={formData.contact_description_ka}
-                onChange={handleInputChange}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="contact_title_en">Contact Title (English)</Label>
+                <Input
+                  id="contact_title_en"
+                  name="contact_title_en"
+                  value={formData.contact_title_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_title_ka">Contact Title (Georgian)</Label>
+                <Input
+                  id="contact_title_ka"
+                  name="contact_title_ka"
+                  value={formData.contact_title_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_description_en">Contact Description (English)</Label>
+                <Textarea
+                  id="contact_description_en"
+                  name="contact_description_en"
+                  placeholder="Contact Description (English)"
+                  value={formData.contact_description_en}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact_description_ka">Contact Description (Georgian)</Label>
+                <Textarea
+                  id="contact_description_ka"
+                  name="contact_description_ka"
+                  placeholder="Contact Description (Georgian)"
+                  value={formData.contact_description_ka}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
           </div>
 
