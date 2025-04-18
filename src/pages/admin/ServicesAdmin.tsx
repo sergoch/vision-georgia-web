@@ -1,7 +1,7 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import {
@@ -52,12 +52,6 @@ const ServicesAdminContent = () => {
       return data || [];
     },
   });
-
-  const handleEdit = (service: any) => {
-    console.log('Editing service:', service);
-    setSelectedService(JSON.parse(JSON.stringify(service))); // Deep copy
-    setIsFormOpen(true);
-  };
 
   const handleDelete = async () => {
     if (!serviceToDelete) return;
@@ -114,6 +108,12 @@ const ServicesAdminContent = () => {
     } finally {
       setServiceToDelete(null);
     }
+  };
+
+  const handleEdit = (service: any) => {
+    console.log('Editing service:', service);
+    setSelectedService(JSON.parse(JSON.stringify(service))); // Deep copy
+    setIsFormOpen(true);
   };
 
   const handleFormSuccess = () => {

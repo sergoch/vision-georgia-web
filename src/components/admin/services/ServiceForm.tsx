@@ -123,7 +123,7 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
         description_ka: data.description_ka,
         full_description_en: data.full_description_en,
         full_description_ka: data.full_description_ka,
-        ...(imageFile || initialData?.id ? { image_url } : { image_url: '' }),
+        image_url,
         updated_at: now
       };
       
@@ -166,14 +166,12 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
         console.log('Service created successfully');
       }
       
-      // Show success toast
       toast({
         description: initialData?.id 
           ? (isGeorgian ? 'სერვისი წარმატებით განახლდა' : 'Service updated successfully') 
           : (isGeorgian ? 'სერვისი წარმატებით დაემატა' : 'Service added successfully')
       });
       
-      // Trigger success callback and close dialog
       onSuccess();
       onClose();
     } catch (error: any) {
