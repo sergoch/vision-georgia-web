@@ -25,8 +25,15 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
     onSubmit
   } = useServiceForm(initialData, onSuccess, onClose);
 
+  // Prevent form from closing when clicking outside while submitting
+  const handleOpenChange = (open: boolean) => {
+    if (!loading) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
@@ -54,7 +61,7 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
           />
           
           <div className="flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
               {isGeorgian ? 'გაუქმება' : 'Cancel'}
             </Button>
             <Button type="submit" disabled={loading}>

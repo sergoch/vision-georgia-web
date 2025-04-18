@@ -43,8 +43,11 @@ const ServicesAdminContent = () => {
         .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error("Error fetching services:", error);
+        throw error;
+      }
+      return data || [];
     },
   });
 
@@ -59,27 +62,44 @@ const ServicesAdminContent = () => {
     if (!serviceToDelete) return;
     
     try {
+      // Delete the service record first
       const { error } = await supabase
         .from('services')
         .delete()
         .eq('id', serviceToDelete.id);
         
-      if (error) throw error;
+      if (error) {
+        console.error("Error deleting service:", error);
+        throw error;
+      }
       
+      // If there's an image, delete it from storage
       if (serviceToDelete.image_url) {
-        // Extract filename from URL
-        const urlParts = serviceToDelete.image_url.split('/');
-        const imagePath = `services/${urlParts[urlParts.length - 1]}`;
-        
-        await supabase.storage
-          .from('site-images')
-          .remove([imagePath]);
+        try {
+          // Extract filename from URL
+          const urlParts = serviceToDelete.image_url.split('/');
+          const fileName = urlParts[urlParts.length - 1];
+          const filePath = `services/${fileName}`;
+          
+          const { error: storageError } = await supabase.storage
+            .from('site-images')
+            .remove([filePath]);
+            
+          if (storageError) {
+            console.error("Error deleting image:", storageError);
+            // Don't throw here, continue as the service was deleted
+          }
+        } catch (imageError) {
+          console.error("Error processing image deletion:", imageError);
+          // Continue as the service was deleted
+        }
       }
       
       toast({
         description: isGeorgian ? 'სერვისი წაიშალა' : 'Service deleted successfully'
       });
       
+      // Refresh the services list
       queryClient.invalidateQueries({ queryKey: ['admin-services'] });
     } catch (error: any) {
       console.error('Error deleting service:', error);
@@ -104,7 +124,9 @@ const ServicesAdminContent = () => {
   if (isLoading) {
     return (
       <AdminLayout>
-        <div>Loading...</div>
+        <div className="flex items-center justify-center h-48">
+          <div className="text-lg">Loading services...</div>
+        </div>
       </AdminLayout>
     );
   }
@@ -125,35 +147,43 @@ const ServicesAdminContent = () => {
           </Button>
         </div>
         
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{isGeorgian ? 'სათაური' : 'Title'}</TableHead>
-              <TableHead>{isGeorgian ? 'აღწერა' : 'Description'}</TableHead>
-              <TableHead>{isGeorgian ? 'თარიღი' : 'Date'}</TableHead>
-              <TableHead className="text-right">{isGeorgian ? 'მოქმედებები' : 'Actions'}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {services?.map((service) => (
-              <TableRow key={service.id}>
-                <TableCell>{isGeorgian ? service.title_ka : service.title_en}</TableCell>
-                <TableCell>{isGeorgian ? service.description_ka : service.description_en}</TableCell>
-                <TableCell>{new Date(service.created_at).toLocaleDateString()}</TableCell>
-                <TableCell className="text-right">
-                  <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEdit(service)}>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    {isGeorgian ? 'რედაქტირება' : 'Edit'}
-                  </Button>
-                  <Button variant="destructive" size="sm" onClick={() => setServiceToDelete(service)}>
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    {isGeorgian ? 'წაშლა' : 'Delete'}
-                  </Button>
-                </TableCell>
+        {services && services.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{isGeorgian ? 'სათაური' : 'Title'}</TableHead>
+                <TableHead>{isGeorgian ? 'აღწერა' : 'Description'}</TableHead>
+                <TableHead>{isGeorgian ? 'თარიღი' : 'Date'}</TableHead>
+                <TableHead className="text-right">{isGeorgian ? 'მოქმედებები' : 'Actions'}</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {services.map((service) => (
+                <TableRow key={service.id}>
+                  <TableCell className="font-medium">{isGeorgian ? service.title_ka : service.title_en}</TableCell>
+                  <TableCell className="max-w-md truncate">{isGeorgian ? service.description_ka : service.description_en}</TableCell>
+                  <TableCell>{new Date(service.created_at).toLocaleDateString()}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEdit(service)}>
+                      <Pencil className="mr-2 h-4 w-4" />
+                      {isGeorgian ? 'რედაქტირება' : 'Edit'}
+                    </Button>
+                    <Button variant="destructive" size="sm" onClick={() => setServiceToDelete(service)}>
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      {isGeorgian ? 'წაშლა' : 'Delete'}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="text-center py-8 bg-muted/20 rounded-md">
+            <p className="text-muted-foreground">
+              {isGeorgian ? 'სერვისები არ მოიძებნა' : 'No services found'}
+            </p>
+          </div>
+        )}
 
         <ServiceForm
           isOpen={isFormOpen}
@@ -162,7 +192,7 @@ const ServicesAdminContent = () => {
           initialData={selectedService}
         />
 
-        <AlertDialog open={!!serviceToDelete} onOpenChange={() => setServiceToDelete(null)}>
+        <AlertDialog open={!!serviceToDelete} onOpenChange={(open) => !open && setServiceToDelete(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>

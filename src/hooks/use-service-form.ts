@@ -86,36 +86,49 @@ export const useServiceForm = (
         image_url = publicUrl;
       }
       
-      const formattedData = {
-        ...data,
-        image_url
-      };
-      
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError) throw userError;
+      // Get the current timestamp for updated_at
+      const now = new Date().toISOString();
       
       if (initialData?.id) {
         // Update existing service
         const { error } = await supabase
           .from('services')
           .update({
-            ...formattedData,
-            updated_at: new Date().toISOString()
+            title_en: data.title_en,
+            title_ka: data.title_ka,
+            description_en: data.description_en,
+            description_ka: data.description_ka,
+            full_description_en: data.full_description_en,
+            full_description_ka: data.full_description_ka,
+            image_url,
+            updated_at: now
           })
           .eq('id', initialData.id);
           
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating service:', error);
+          throw error;
+        }
       } else {
-        // Create new service with all required fields
+        // Create new service
         const { error } = await supabase
           .from('services')
           .insert([{
-            ...formattedData,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            title_en: data.title_en,
+            title_ka: data.title_ka,
+            description_en: data.description_en,
+            description_ka: data.description_ka,
+            full_description_en: data.full_description_en,
+            full_description_ka: data.full_description_ka,
+            image_url,
+            created_at: now,
+            updated_at: now
           }]);
           
-        if (error) throw error;
+        if (error) {
+          console.error('Error creating service:', error);
+          throw error;
+        }
       }
       
       toast({
