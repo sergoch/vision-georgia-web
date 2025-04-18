@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,7 +41,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
           </Route>
 
-          {/* Auth route */}
+          {/* Auth route - does not use Layout component */}
           <Route path="/auth" element={<Auth />} />
 
           {/* Admin routes */}

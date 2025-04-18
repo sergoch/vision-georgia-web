@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { supabase } from '@/integrations/supabase/client';
-import { useLanguage } from '../contexts/LanguageContext';
+import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 
-const Auth = () => {
+// Create a component that uses the language hook
+const AuthContent = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -110,6 +111,15 @@ const Auth = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Main Auth component that provides the language context
+const Auth = () => {
+  return (
+    <LanguageProvider>
+      <AuthContent />
+    </LanguageProvider>
   );
 };
 
