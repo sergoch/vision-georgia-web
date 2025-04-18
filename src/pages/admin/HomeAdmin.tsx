@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
@@ -9,6 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 
 const HomeAdminContent = () => {
   const { isGeorgian } = useLanguage();
@@ -47,7 +47,10 @@ const HomeAdminContent = () => {
     contact_description_ka: '',
   });
 
-  // Populate form data when homePageData loads
+  const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
+  const [projectImageFile, setProjectImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
   useEffect(() => {
     if (homePageData) {
       setFormData({
@@ -79,11 +82,58 @@ const HomeAdminContent = () => {
     }));
   };
 
+  const handleImageUpload = async (imageFile: File | null, section: 'hero' | 'projects') => {
+    if (!imageFile) return null;
+
+    try {
+      const fileExt = imageFile.name.split('.').pop();
+      const fileName = `${section}-image-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `site-images/${fileName}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('site-images')
+        .upload(filePath, imageFile);
+        
+      if (uploadError) throw uploadError;
+      
+      const { data: { publicUrl } } = supabase.storage
+        .from('site-images')
+        .getPublicUrl(filePath);
+      
+      return publicUrl;
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        description: error.message
+      });
+      return null;
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, section: 'hero' | 'projects') => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (section === 'hero') {
+        setHeroImageFile(file);
+      } else {
+        setProjectImageFile(file);
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setUploading(true);
     
     try {
-      // Update the home page row (adding the WHERE clause to specify the row to update)
+      const heroImageUrl = heroImageFile 
+        ? await handleImageUpload(heroImageFile, 'hero') 
+        : formData.hero_image_url;
+
+      const projectImageUrl = projectImageFile 
+        ? await handleImageUpload(projectImageFile, 'projects') 
+        : formData.projects_image_url;
+
       const { error } = await supabase
         .from('home_page')
         .update({
@@ -91,21 +141,20 @@ const HomeAdminContent = () => {
           hero_title_ka: formData.hero_title_ka,
           hero_subtitle_en: formData.hero_subtitle_en,
           hero_subtitle_ka: formData.hero_subtitle_ka,
-          hero_image_url: formData.hero_image_url,
+          hero_image_url: heroImageUrl,
           services_title_en: formData.services_title_en,
           services_title_ka: formData.services_title_ka,
           projects_title_en: formData.projects_title_en,
           projects_title_ka: formData.projects_title_ka,
           projects_description_en: formData.projects_description_en,
           projects_description_ka: formData.projects_description_ka,
-          projects_image_url: formData.projects_image_url,
+          projects_image_url: projectImageUrl,
           contact_title_en: formData.contact_title_en,
           contact_title_ka: formData.contact_title_ka,
           contact_description_en: formData.contact_description_en,
           contact_description_ka: formData.contact_description_ka,
         })
-        .eq('id', homePageData.id)  // Add WHERE clause to specify the row to update
-        .select();
+        .eq('id', homePageData.id);
 
       if (error) throw error;
 
@@ -113,7 +162,6 @@ const HomeAdminContent = () => {
         description: isGeorgian ? 'მთავარი გვერდი წარმატებით განახლდა' : 'Home page updated successfully',
       });
 
-      // Invalidate queries to refetch the updated data
       queryClient.invalidateQueries({ queryKey: ['home-page'] });
       queryClient.invalidateQueries({ queryKey: ['admin-home-page'] });
     } catch (error: any) {
@@ -123,6 +171,8 @@ const HomeAdminContent = () => {
         title: isGeorgian ? 'შეცდომა' : 'Error',
         description: error.message,
       });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -142,7 +192,6 @@ const HomeAdminContent = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Hero Section */}
           <div className="border rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">
               {isGeorgian ? 'გმირის სექცია' : 'Hero Section'}
@@ -187,18 +236,26 @@ const HomeAdminContent = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="hero_image_url">Hero Image URL</Label>
+                <Label htmlFor="hero_image">Hero Image</Label>
                 <Input
-                  id="hero_image_url"
-                  name="hero_image_url"
-                  value={formData.hero_image_url}
-                  onChange={handleInputChange}
+                  id="hero_image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageChange(e, 'hero')}
                 />
+                {(formData.hero_image_url || heroImageFile) && (
+                  <div className="mt-2">
+                    <img 
+                      src={heroImageFile ? URL.createObjectURL(heroImageFile) : formData.hero_image_url} 
+                      alt="Hero Preview" 
+                      className="w-full max-h-64 object-cover rounded-md border" 
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Services Section */}
           <div className="border rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">
               {isGeorgian ? 'სერვისების სექცია' : 'Services Section'}
@@ -225,7 +282,6 @@ const HomeAdminContent = () => {
             </div>
           </div>
 
-          {/* Projects Section */}
           <div className="border rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">
               {isGeorgian ? 'პროექტების სექცია' : 'Projects Section'}
@@ -270,18 +326,26 @@ const HomeAdminContent = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="projects_image_url">Projects Image URL</Label>
+                <Label htmlFor="projects_image">Projects Image</Label>
                 <Input
-                  id="projects_image_url"
-                  name="projects_image_url"
-                  value={formData.projects_image_url}
-                  onChange={handleInputChange}
+                  id="projects_image"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageChange(e, 'projects')}
                 />
+                {(formData.projects_image_url || projectImageFile) && (
+                  <div className="mt-2">
+                    <img 
+                      src={projectImageFile ? URL.createObjectURL(projectImageFile) : formData.projects_image_url} 
+                      alt="Projects Preview" 
+                      className="w-full max-h-64 object-cover rounded-md border" 
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Contact Section */}
           <div className="border rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4">
               {isGeorgian ? 'კონტაქტის სექცია' : 'Contact Section'}
@@ -328,7 +392,8 @@ const HomeAdminContent = () => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={uploading}>
+            {uploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isGeorgian ? 'შენახვა' : 'Save Changes'}
           </Button>
         </form>
