@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -24,11 +23,10 @@ const Home: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+      <div className="fixed top-4 right-4 z-50">
         <Link to="/auth">
-          <Button variant="ghost" size="sm" className="text-white hover:text-rvision-orange hover:bg-rvision-blue/30">
-            <LogIn className="mr-2 h-4 w-4" />
-            {isGeorgian ? 'შესვლა' : 'Login'}
+          <Button variant="ghost" size="icon" className="text-white hover:text-rvision-orange hover:bg-rvision-blue/30">
+            <LogIn className="h-5 w-5" />
           </Button>
         </Link>
       </div>
