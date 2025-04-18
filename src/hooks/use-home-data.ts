@@ -1,18 +1,15 @@
 
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { pool } from '@/lib/mysql';
 import type { HomePageData, Service } from '@/types/home-page';
 
 export const useHomeData = () => {
   const { data: homePageData, isLoading: isHomeLoading } = useQuery({
     queryKey: ['home-page'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('home_page')
-        .select('*')
-        .single();
-      
-      if (error) throw error;
+      const [rows] = await pool.query('SELECT * FROM home_page LIMIT 1');
+      const data = rows[0];
+      if (!data) throw new Error('Home page data not found');
       return data as HomePageData;
     },
   });
@@ -20,15 +17,10 @@ export const useHomeData = () => {
   const { data: services, isLoading: isServicesLoading } = useQuery({
     queryKey: ['random-services'],
     queryFn: async () => {
-      // Use a more PostgreSQL-compatible random ordering
-      const { data, error } = await supabase
-        .from('services')
-        .select('*')
-        .limit(3)
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      return data as Service[];
+      const [rows] = await pool.query(
+        'SELECT * FROM services ORDER BY created_at DESC LIMIT 3'
+      );
+      return rows as Service[];
     },
   });
 
