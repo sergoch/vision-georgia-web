@@ -21,7 +21,7 @@ export const useHomeData = () => {
   });
 
   return {
-    homePageData: data?.homePageData,
+    homePageData: data?.homePageData || null,
     services: data?.services || [],
     isLoading,
     error

@@ -9,6 +9,7 @@ import { ContactSection } from '@/components/home/ContactSection';
 import { useHomeData } from '@/hooks/use-home-data';
 import { Button } from '@/components/ui/button';
 import { LogIn } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Home: React.FC = () => {
   const { isGeorgian } = useLanguage();
@@ -17,15 +18,33 @@ const Home: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div>{isGeorgian ? 'იტვირთება...' : 'Loading...'}</div>
+        <div className="text-center">
+          <Skeleton className="h-8 w-64 mx-auto mb-4" />
+          <Skeleton className="h-4 w-48 mx-auto" />
+        </div>
       </div>
     );
   }
 
   if (error || !homePageData) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div>{isGeorgian ? 'შეცდომა მონაცემების ჩატვირთვისას' : 'Error loading data'}</div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold mb-4">
+            {isGeorgian ? 'შეცდომა მონაცემების ჩატვირთვისას' : 'Error loading data'}
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {isGeorgian 
+              ? 'სამწუხაროდ, მთავარი გვერდის მონაცემების ჩატვირთვა ვერ მოხერხდა. გთხოვთ, სცადოთ მოგვიანებით.' 
+              : 'Unfortunately, we could not load the homepage data. Please try again later.'}
+          </p>
+          <Button 
+            onClick={() => window.location.reload()}
+            className="bg-rvision-blue hover:bg-rvision-blue/90"
+          >
+            {isGeorgian ? 'თავიდან სცადეთ' : 'Try Again'}
+          </Button>
+        </div>
       </div>
     );
   }

@@ -6,15 +6,21 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
   try {
     console.log('Attempting to fetch home page data from Supabase...');
     
-    // Fetch home page data
-    const { data: homeData, error: homeError } = await supabase
+    // Fetch home page data - get all rows and use the first one
+    const { data: homeDataAll, error: homeError } = await supabase
       .from('home_page')
-      .select('*')
-      .single();
+      .select('*');
     
     if (homeError) {
       console.error('Error fetching home page data:', homeError);
       throw homeError;
+    }
+    
+    // Use the first row from the results
+    const homeData = homeDataAll && homeDataAll.length > 0 ? homeDataAll[0] : null;
+    
+    if (!homeData) {
+      throw new Error('No home page data found');
     }
     
     console.log('Home page data fetched successfully:', homeData);
