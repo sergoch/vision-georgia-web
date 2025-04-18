@@ -54,45 +54,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ceo_info: {
-        Row: {
-          bio_en: string
-          bio_ka: string
-          created_at: string
-          id: string
-          image_url: string | null
-          name_en: string
-          name_ka: string
-          title_en: string
-          title_ka: string
-          updated_at: string
-        }
-        Insert: {
-          bio_en: string
-          bio_ka: string
-          created_at?: string
-          id?: string
-          image_url?: string | null
-          name_en: string
-          name_ka: string
-          title_en: string
-          title_ka: string
-          updated_at?: string
-        }
-        Update: {
-          bio_en?: string
-          bio_ka?: string
-          created_at?: string
-          id?: string
-          image_url?: string | null
-          name_en?: string
-          name_ka?: string
-          title_en?: string
-          title_ka?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       contact_info: {
         Row: {
           content_en: Json
@@ -324,6 +285,42 @@ export type Database = {
           title_en?: string
           title_ka?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      seo_settings: {
+        Row: {
+          created_at: string
+          id: string
+          og_image_url: string | null
+          site_description_en: string
+          site_description_ka: string
+          site_keywords: string
+          site_title: string
+          twitter_handle: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          og_image_url?: string | null
+          site_description_en?: string
+          site_description_ka?: string
+          site_keywords?: string
+          site_title?: string
+          twitter_handle?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          og_image_url?: string | null
+          site_description_en?: string
+          site_description_ka?: string
+          site_keywords?: string
+          site_title?: string
+          twitter_handle?: string | null
+          updated_at?: string
         }
         Relationships: []
       }

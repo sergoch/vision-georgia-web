@@ -1,18 +1,15 @@
 
 import AdminLayout from '@/components/admin/AdminLayout';
 import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
-import CeoInfoForm from '@/components/admin/ceo/CeoInfoForm';
+import SeoSettingsForm from '@/components/admin/seo/SeoSettingsForm';
 import AnalyticsSettings from '@/components/admin/analytics/AnalyticsSettings';
-import { useCeoInfo } from '@/hooks/use-ceo-info';
+import { useSeoSettings } from '@/hooks/use-seo-settings';
 import { useAnalyticsSettings } from '@/hooks/use-analytics-settings';
-import { Card } from '@/components/ui/card';
 
-// Create a separate component for the dashboard content
-// This will be wrapped with the LanguageProvider
 const DashboardContent = () => {
   const { isGeorgian } = useLanguage();
-  const { ceoInfo, isLoading: isCeoLoading, handleUpdate: updateCeoInfo } = useCeoInfo();
-  const { settings, updateSettings } = useAnalyticsSettings();
+  const { settings: seoSettings, isLoading: isSeoLoading, updateSettings: updateSeoSettings } = useSeoSettings();
+  const { settings: analyticsSettings, updateSettings: updateAnalyticsSettings } = useAnalyticsSettings();
 
   return (
     <AdminLayout>
@@ -22,18 +19,17 @@ const DashboardContent = () => {
         </h1>
         
         <div className="grid grid-cols-1 gap-6">
-          {ceoInfo && (
-            <CeoInfoForm 
-              initialData={ceoInfo}
-              onSubmit={updateCeoInfo}
-              isLoading={isCeoLoading}
+          {seoSettings && (
+            <SeoSettingsForm 
+              settings={seoSettings}
+              onSubmit={updateSeoSettings}
             />
           )}
 
-          {settings && (
+          {analyticsSettings && (
             <AnalyticsSettings 
-              settings={settings}
-              onSubmit={updateSettings}
+              settings={analyticsSettings}
+              onSubmit={updateAnalyticsSettings}
             />
           )}
 
