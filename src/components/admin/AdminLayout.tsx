@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { LayoutDashboard, FileText, Settings, Briefcase, LogOut } from 'lucide-react';
@@ -60,6 +59,14 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   <a href="/admin/services" className="w-full">
                     <FileText />
                     <span>{isGeorgian ? 'სერვისები' : 'Services'}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/admin/pages" className="w-full">
+                    <FileText />
+                    <span>{isGeorgian ? 'გვერდები' : 'Pages'}</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

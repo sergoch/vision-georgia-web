@@ -48,6 +48,7 @@ const App = () => (
           <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/projects" element={<ProtectedRoute><ProjectsAdmin /></ProtectedRoute>} />
           <Route path="/admin/services" element={<ProtectedRoute><ServicesAdmin /></ProtectedRoute>} />
+          <Route path="/admin/pages" element={<ProtectedRoute><PagesAdmin /></ProtectedRoute>} />
           
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />
