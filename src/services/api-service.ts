@@ -15,7 +15,6 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
     
     // Mock data (use the same structure as your database)
     const mockHomeData: HomePageData = {
-      id: '1',
       hero_title_en: 'Real Vision',
       hero_title_ka: 'რეალ ვიჟენ',
       hero_subtitle_en: 'Engineering and Geodetic Services',
@@ -32,7 +31,6 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
       contact_title_ka: 'დაგვიკავშირდით',
       contact_description_en: 'Get in touch with our team',
       contact_description_ka: 'დაუკავშირდით ჩვენს გუნდს',
-      updated_at: new Date().toISOString()
     };
     
     const mockServices: Service[] = [
@@ -42,8 +40,6 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
         title_ka: 'გეოდეზიური სამუშაოები',
         description_en: 'Professional geodetic services',
         description_ka: 'პროფესიონალური გეოდეზიური მომსახურება',
-        full_description_en: 'We provide comprehensive geodetic services...',
-        full_description_ka: 'ჩვენ გთავაზობთ სრულ გეოდეზიურ მომსახურებას...',
         image_url: 'https://example.com/geodetic.jpg',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -54,8 +50,6 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
         title_ka: 'საინჟინრო',
         description_en: 'Engineering solutions',
         description_ka: 'საინჟინრო გადაწყვეტილებები',
-        full_description_en: 'Complete engineering solutions...',
-        full_description_ka: 'სრული საინჟინრო გადაწყვეტილებები...',
         image_url: 'https://example.com/engineering.jpg',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -66,8 +60,6 @@ export const fetchHomeData = async (): Promise<{ homePageData: HomePageData, ser
         title_ka: 'GIS სერვისები',
         description_en: 'Geographic Information Systems',
         description_ka: 'გეოგრაფიული საინფორმაციო სისტემები',
-        full_description_en: 'We provide GIS services...',
-        full_description_ka: 'ჩვენ გთავაზობთ GIS მომსახურებას...',
         image_url: 'https://example.com/gis.jpg',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()

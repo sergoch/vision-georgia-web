@@ -1,5 +1,6 @@
 
 export interface HomePageData {
+  id?: string;  // Make id optional to match the mock data
   hero_title_en: string;
   hero_title_ka: string;
   hero_subtitle_en: string;
@@ -25,4 +26,6 @@ export interface Service {
   description_en: string;
   description_ka: string;
   image_url: string;
+  created_at?: string;
+  updated_at?: string;
 }
