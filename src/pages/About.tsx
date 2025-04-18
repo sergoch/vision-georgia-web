@@ -1,38 +1,37 @@
-
 import React from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 // Hard-coded content to avoid syntax errors
 const georgianContent = {
-  paragraph1: "შპს „რეალ ვიჟენი" არის პროფესიული საინჟინრო და გეოდეზიური კომპანია, რომელიც დაფუძნებულია ბათუმში.",
-  paragraph2: "ჩვენი გუნდი შედგება გამოცდილი ინჟინრებისა და გეოდეზისტებისგან, რომლებსაც აქვთ მრავალწლიანი გამოცდილება სხვადასხვა ტიპის პროექტებში.",
-  paragraph3: "ჩვენი მიზანია დავეხმაროთ კლიენტებს მიიღონ ზუსტი მონაცემები და ინფორმაცია, რომელიც მათ ესაჭიროებათ.",
-  paragraph4: "შპს „რეალ ვიჟენი" მუშაობს როგორც კერძო, ისე სახელმწიფო სექტორის კლიენტებთან, მათ შორის დეველოპერებთან და არქიტექტორებთან.",
-  quality: "ჩვენთვის უმთავრესია უმაღლესი ხარისხის მონაცემების და სერვისების მიწოდება.",
-  innovation: "ჩვენ ვიყენებთ უახლეს ტექნოლოგიებს და ინოვაციურ მიდგომებს.",
-  professionalism: "ჩვენი გუნდი შედგება მაღალკვალიფიციური პროფესიონალებისგან.",
-  timeliness: "ჩვენ ვაფასებთ თქვენს დროს და ვუზრუნველყოფთ პროექტების დასრულებას დროულად.",
-  coreValues: "ჩვენი ძირითადი ღირებულებები",
-  quality_title: "ხარისხი და სიზუსტე",
-  innovation_title: "ინოვაცია",
-  professionalism_title: "პროფესიონალიზმი",
-  timeliness_title: "დროულობა"
+  paragraph1: 'შპს „რეალ ვიჟენი" არის პროფესიული საინჟინრო და გეოდეზიური კომპანია, რომელიც დაფუძნებულია ბათუმში.',
+  paragraph2: 'ჩვენი გუნდი შედგება გამოცდილი ინჟინრებისა და გეოდეზისტებისგან, რომლებსაც აქვთ მრავალწლიანი გამოცდილება სხვადასხვა ტიპის პროექტებში.',
+  paragraph3: 'ჩვენი მიზანია დავეხმაროთ კლიენტებს მიიღონ ზუსტი მონაცემები და ინფორმაცია, რომელიც მათ ესაჭიროებათ.',
+  paragraph4: 'შპს „რეალ ვიჟენი" მუშაობს როგორც კერძო, ისე სახელმწიფო სექტორის კლიენტებთან, მათ შორის დეველოპერებთან და არქიტექტორებთან.',
+  quality: 'ჩვენთვის უმთავრესია უმაღლესი ხარისხის მონაცემების და სერვისების მიწოდება.',
+  innovation: 'ჩვენ ვიყენებთ უახლეს ტექნოლოგიებს და ინოვაციურ მიდგომებს.',
+  professionalism: 'ჩვენი გუნდი შედგება მაღალკვალიფიციური პროფესიონალებისგან.',
+  timeliness: 'ჩვენ ვაფასებთ თქვენს დროს და ვუზრუნველყოფთ პროექტების დასრულებას დროულად.',
+  coreValues: 'ჩვენი ძირითადი ღირებულებები',
+  quality_title: 'ხარისხი და სიზუსტე',
+  innovation_title: 'ინოვაცია',
+  professionalism_title: 'პროფესიონალიზმი',
+  timeliness_title: 'დროულობა'
 };
 
 const englishContent = {
-  paragraph1: "Real Vision LLC is a professional engineering and geodetic company based in Batumi, Georgia.",
-  paragraph2: "Our team consists of experienced engineers and geodesists with many years of experience in various types of projects.",
-  paragraph3: "Our goal is to help clients obtain accurate data and information they need for effective decision-making.",
-  paragraph4: "Real Vision LLC works with both private and public sector clients, including developers, architects, and construction companies.",
-  quality: "We prioritize delivering the highest quality data and services.",
-  innovation: "We use the latest technologies and innovative approaches.",
-  professionalism: "Our team consists of highly qualified professionals.",
-  timeliness: "We value your time and ensure projects are completed on schedule.",
-  coreValues: "Our Core Values",
-  quality_title: "Quality and Precision",
-  innovation_title: "Innovation",
-  professionalism_title: "Professionalism",
-  timeliness_title: "Timeliness"
+  paragraph1: 'Real Vision LLC is a professional engineering and geodetic company based in Batumi, Georgia.',
+  paragraph2: 'Our team consists of experienced engineers and geodesists with many years of experience in various types of projects.',
+  paragraph3: 'Our goal is to help clients obtain accurate data and information they need for effective decision-making.',
+  paragraph4: 'Real Vision LLC works with both private and public sector clients, including developers, architects, and construction companies.',
+  quality: 'We prioritize delivering the highest quality data and services.',
+  innovation: 'We use the latest technologies and innovative approaches.',
+  professionalism: 'Our team consists of highly qualified professionals.',
+  timeliness: 'We value your time and ensure projects are completed on schedule.',
+  coreValues: 'Our Core Values',
+  quality_title: 'Quality and Precision',
+  innovation_title: 'Innovation',
+  professionalism_title: 'Professionalism',
+  timeliness_title: 'Timeliness'
 };
 
 const About: React.FC = () => {
