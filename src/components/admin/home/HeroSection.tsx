@@ -1,15 +1,18 @@
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { HomeFormData } from "@/types/home";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useImageDelete } from "@/hooks/use-image-delete";
 
 interface HeroSectionProps {
   formData: HomeFormData;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>, section: 'hero' | 'projects') => void;
   heroImageFile: File | null;
+  onImageDelete: (imageType: 'hero' | 'projects') => void;
 }
 
 export const HeroSection = ({
@@ -17,8 +20,16 @@ export const HeroSection = ({
   handleInputChange,
   handleImageChange,
   heroImageFile,
+  onImageDelete,
 }: HeroSectionProps) => {
   const { isGeorgian } = useLanguage();
+  const { deleteImage } = useImageDelete();
+
+  const handleDelete = async () => {
+    if (formData.hero_image_url && await deleteImage(formData.hero_image_url)) {
+      onImageDelete('hero');
+    }
+  };
 
   return (
     <div className="border rounded-lg p-6">
@@ -64,21 +75,33 @@ export const HeroSection = ({
         </div>
         <div className="space-y-2">
           <Label htmlFor="hero_image">Hero Image</Label>
-          <Input
-            id="hero_image"
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageChange(e, 'hero')}
-          />
-          {(formData.hero_image_url || heroImageFile) && (
-            <div className="mt-2">
-              <img 
-                src={heroImageFile ? URL.createObjectURL(heroImageFile) : formData.hero_image_url} 
-                alt="Hero Preview" 
-                className="w-full max-h-64 object-cover rounded-md border" 
-              />
-            </div>
-          )}
+          <div className="space-y-4">
+            <Input
+              id="hero_image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageChange(e, 'hero')}
+            />
+            {(formData.hero_image_url || heroImageFile) && (
+              <div className="relative">
+                <img 
+                  src={heroImageFile ? URL.createObjectURL(heroImageFile) : formData.hero_image_url} 
+                  alt="Hero Preview" 
+                  className="w-full max-h-64 object-cover rounded-md border" 
+                />
+                {formData.hero_image_url && (
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="absolute top-2 right-2"
+                    onClick={handleDelete}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

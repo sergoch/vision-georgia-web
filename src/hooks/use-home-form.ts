@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -103,6 +102,19 @@ export const useHomeForm = (initialData: any) => {
     }
   };
 
+  const handleImageDelete = (imageType: 'hero' | 'projects') => {
+    setFormData(prev => ({
+      ...prev,
+      [imageType === 'hero' ? 'hero_image_url' : 'projects_image_url']: ''
+    }));
+
+    if (imageType === 'hero') {
+      setHeroImageFile(null);
+    } else {
+      setProjectImageFile(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setUploading(true);
@@ -152,6 +164,7 @@ export const useHomeForm = (initialData: any) => {
     projectImageFile,
     handleInputChange,
     handleImageChange,
+    handleImageDelete,
     handleSubmit,
   };
 };
