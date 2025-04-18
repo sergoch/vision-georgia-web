@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 const Home: React.FC = () => {
   const { t, isGeorgian } = useLanguage();
 
-  const { data: homePageData, isLoading } = useQuery({
+  const { data: homePageData, isLoading: isHomeLoading } = useQuery({
     queryKey: ['home-page'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -22,7 +22,21 @@ const Home: React.FC = () => {
     },
   });
 
-  if (isLoading) {
+  const { data: services, isLoading: isServicesLoading } = useQuery({
+    queryKey: ['random-services'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .limit(3)
+        .order('random()');
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isHomeLoading || isServicesLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div>{isGeorgian ? 'იტვირთება...' : 'Loading...'}</div>
@@ -34,7 +48,6 @@ const Home: React.FC = () => {
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="h-screen relative overflow-hidden">
-        {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat bg-fixed z-0"
           style={{ 
@@ -44,11 +57,9 @@ const Home: React.FC = () => {
             backgroundSize: "cover",
           }}
         >
-          {/* Overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-rvision-blue/80 via-rvision-blue/70 to-rvision-blue"></div>
         </div>
 
-        {/* Content */}
         <div className="container mx-auto px-4 h-full flex items-center relative z-10 pt-20">
           <div className="max-w-3xl animate-fade-in">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
@@ -88,59 +99,26 @@ const Home: React.FC = () => {
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Service 1 */}
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-all group">
-              <div className="w-16 h-16 bg-rvision-green/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-rvision-green/30 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rvision-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
+            {services?.map((service) => (
+              <div key={service.id} className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-all group">
+                <div className="w-16 h-16 bg-rvision-green/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-rvision-green/30 transition-colors">
+                  <img 
+                    src={service.image_url} 
+                    alt={isGeorgian ? service.title_ka : service.title_en}
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {isGeorgian ? service.title_ka : service.title_en}
+                </h3>
+                <p className="text-gray-300 mb-6">
+                  {isGeorgian ? service.description_ka : service.description_en}
+                </p>
+                <Link to={`/services/${service.id}`} className="text-rvision-orange hover:underline flex items-center">
+                  {t('home.learnMore')} <ArrowRight className="ml-2" size={16} />
+                </Link>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {t('services.engineering')}
-              </h3>
-              <p className="text-gray-300 mb-6">
-                Professional engineering consulting services for construction, infrastructure, and development projects.
-              </p>
-              <Link to="/services" className="text-rvision-orange hover:underline flex items-center">
-                Learn more <ArrowRight className="ml-2" size={16} />
-              </Link>
-            </div>
-
-            {/* Service 2 */}
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-all group">
-              <div className="w-16 h-16 bg-rvision-green/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-rvision-green/30 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rvision-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {t('services.geodetic')}
-              </h3>
-              <p className="text-gray-300 mb-6">
-                Precise topographic surveying, land mapping, and geodetic measurements for planning and development.
-              </p>
-              <Link to="/services" className="text-rvision-orange hover:underline flex items-center">
-                Learn more <ArrowRight className="ml-2" size={16} />
-              </Link>
-            </div>
-
-            {/* Service 3 */}
-            <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10 hover:bg-white/10 transition-all group">
-              <div className="w-16 h-16 bg-rvision-green/20 rounded-full flex items-center justify-center mb-6 group-hover:bg-rvision-green/30 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-rvision-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {t('services.lidar')}
-              </h3>
-              <p className="text-gray-300 mb-6">
-                Advanced LIDAR technology for high-precision aerial surveys and 3D terrain modeling for various applications.
-              </p>
-              <Link to="/services" className="text-rvision-orange hover:underline flex items-center">
-                Learn more <ArrowRight className="ml-2" size={16} />
-              </Link>
-            </div>
+            ))}
           </div>
           
           <div className="text-center mt-16">
