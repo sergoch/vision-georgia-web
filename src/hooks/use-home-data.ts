@@ -20,11 +20,12 @@ export const useHomeData = () => {
   const { data: services, isLoading: isServicesLoading } = useQuery({
     queryKey: ['random-services'],
     queryFn: async () => {
+      // Use a more PostgreSQL-compatible random ordering
       const { data, error } = await supabase
         .from('services')
         .select('*')
         .limit(3)
-        .order('random()');
+        .order('created_at', { ascending: false });
       
       if (error) throw error;
       return data as Service[];
