@@ -14,26 +14,32 @@ interface ServiceFormData {
   full_description_ka: string;
 }
 
-export const useServiceForm = (
-  initialData: any,
-  onSuccess: () => void,
-  onClose: () => void
-) => {
+interface UseServiceFormProps {
+  initialData: any;
+  onSuccess: () => void;
+  onClose: () => void;
+}
+
+export const useServiceForm = ({
+  initialData,
+  onSuccess,
+  onClose
+}: UseServiceFormProps) => {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(initialData?.image_url || '');
+  const [imagePreview, setImagePreview] = useState<string>('');
   
   const { toast } = useToast();
   const { isGeorgian } = useLanguage();
   
   const form = useForm<ServiceFormData>({
     defaultValues: {
-      title_en: initialData?.title_en || '',
-      title_ka: initialData?.title_ka || '',
-      description_en: initialData?.description_en || '',
-      description_ka: initialData?.description_ka || '',
-      full_description_en: initialData?.full_description_en || '',
-      full_description_ka: initialData?.full_description_ka || ''
+      title_en: '',
+      title_ka: '',
+      description_en: '',
+      description_ka: '',
+      full_description_en: '',
+      full_description_ka: ''
     }
   });
 
@@ -52,6 +58,18 @@ export const useServiceForm = (
       if (initialData.image_url) {
         setImagePreview(initialData.image_url);
       }
+    } else {
+      // Reset form when creating new
+      form.reset({
+        title_en: '',
+        title_ka: '',
+        description_en: '',
+        description_ka: '',
+        full_description_en: '',
+        full_description_ka: ''
+      });
+      setImagePreview('');
+      setImageFile(null);
     }
   }, [initialData, form]);
 
@@ -65,24 +83,34 @@ export const useServiceForm = (
 
   const onSubmit = async (data: ServiceFormData) => {
     setLoading(true);
+    console.log('Submitting service form:', { data, initialData, imageFile });
+    
     try {
       let image_url = initialData?.image_url || '';
       
+      // Handle image upload if there's a new image
       if (imageFile) {
+        // Generate a unique filename
         const fileExt = imageFile.name.split('.').pop();
         const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
         const filePath = `services/${fileName}`;
         
-        const { error: uploadError } = await supabase.storage
+        console.log('Uploading image:', filePath);
+        
+        const { error: uploadError, data: uploadData } = await supabase.storage
           .from('site-images')
           .upload(filePath, imageFile);
           
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          throw uploadError;
+        }
         
         const { data: { publicUrl } } = supabase.storage
           .from('site-images')
           .getPublicUrl(filePath);
           
+        console.log('Image uploaded successfully:', publicUrl);
         image_url = publicUrl;
       }
       
@@ -91,6 +119,8 @@ export const useServiceForm = (
       
       if (initialData?.id) {
         // Update existing service
+        console.log('Updating service:', initialData.id);
+        
         const { error } = await supabase
           .from('services')
           .update({
@@ -100,7 +130,7 @@ export const useServiceForm = (
             description_ka: data.description_ka,
             full_description_en: data.full_description_en,
             full_description_ka: data.full_description_ka,
-            image_url,
+            ...(imageFile ? { image_url } : {}),
             updated_at: now
           })
           .eq('id', initialData.id);
@@ -109,8 +139,12 @@ export const useServiceForm = (
           console.error('Error updating service:', error);
           throw error;
         }
+        
+        console.log('Service updated successfully');
       } else {
         // Create new service
+        console.log('Creating new service');
+        
         const { error } = await supabase
           .from('services')
           .insert([{
@@ -129,6 +163,8 @@ export const useServiceForm = (
           console.error('Error creating service:', error);
           throw error;
         }
+        
+        console.log('Service created successfully');
       }
       
       toast({

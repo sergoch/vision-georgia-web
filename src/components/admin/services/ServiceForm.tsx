@@ -23,11 +23,15 @@ const ServiceForm = ({ initialData, isOpen, onClose, onSuccess }: ServiceFormPro
     imagePreview,
     handleImageChange,
     onSubmit
-  } = useServiceForm(initialData, onSuccess, onClose);
+  } = useServiceForm({
+    initialData,
+    onSuccess,
+    onClose
+  });
 
   // Prevent form from closing when clicking outside while submitting
   const handleOpenChange = (open: boolean) => {
-    if (!loading) {
+    if (!loading && !open) {
       onClose();
     }
   };

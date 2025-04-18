@@ -38,6 +38,7 @@ const ServicesAdminContent = () => {
   const { data: services, isLoading } = useQuery({
     queryKey: ['admin-services'],
     queryFn: async () => {
+      console.log('Fetching services');
       const { data, error } = await supabase
         .from('services')
         .select('*')
@@ -47,11 +48,13 @@ const ServicesAdminContent = () => {
         console.error("Error fetching services:", error);
         throw error;
       }
+      console.log('Services fetched:', data);
       return data || [];
     },
   });
 
   const handleEdit = (service: any) => {
+    console.log('Editing service:', service);
     // Make a deep copy to avoid reference issues
     const serviceCopy = JSON.parse(JSON.stringify(service));
     setSelectedService(serviceCopy);
@@ -61,8 +64,9 @@ const ServicesAdminContent = () => {
   const handleDelete = async () => {
     if (!serviceToDelete) return;
     
+    console.log('Deleting service:', serviceToDelete);
     try {
-      // Delete the service record first
+      // Delete the service record
       const { error } = await supabase
         .from('services')
         .delete()
@@ -81,13 +85,15 @@ const ServicesAdminContent = () => {
           const fileName = urlParts[urlParts.length - 1];
           const filePath = `services/${fileName}`;
           
+          console.log('Deleting image:', filePath);
+          
           const { error: storageError } = await supabase.storage
             .from('site-images')
             .remove([filePath]);
             
           if (storageError) {
             console.error("Error deleting image:", storageError);
-            // Don't throw here, continue as the service was deleted
+            // Continue as the service was deleted
           }
         } catch (imageError) {
           console.error("Error processing image deletion:", imageError);
@@ -113,12 +119,20 @@ const ServicesAdminContent = () => {
   };
 
   const handleFormSuccess = () => {
+    console.log('Form submitted successfully');
     queryClient.invalidateQueries({ queryKey: ['admin-services'] });
   };
 
   const handleFormClose = () => {
+    console.log('Form closed');
     setIsFormOpen(false);
     setSelectedService(null);
+  };
+
+  const handleOpenForm = () => {
+    console.log('Opening new service form');
+    setSelectedService(null);
+    setIsFormOpen(true);
   };
 
   if (isLoading) {
@@ -138,10 +152,7 @@ const ServicesAdminContent = () => {
           <h1 className="text-3xl font-bold">
             {isGeorgian ? 'სერვისები' : 'Services'}
           </h1>
-          <Button onClick={() => {
-            setSelectedService(null);
-            setIsFormOpen(true);
-          }}>
+          <Button onClick={handleOpenForm}>
             <Plus className="mr-2 h-4 w-4" />
             {isGeorgian ? 'ახალი სერვისი' : 'New Service'}
           </Button>
