@@ -20,6 +20,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import ProjectsAdmin from "./pages/admin/ProjectsAdmin";
 import ServicesAdmin from "./pages/admin/ServicesAdmin";
 import PagesAdmin from "./pages/admin/PagesAdmin";
+import SpecialPagesAdmin from "./pages/admin/SpecialPagesAdmin";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ const App = () => (
           <Route path="/admin/projects" element={<ProtectedRoute><ProjectsAdmin /></ProtectedRoute>} />
           <Route path="/admin/services" element={<ProtectedRoute><ServicesAdmin /></ProtectedRoute>} />
           <Route path="/admin/pages" element={<ProtectedRoute><PagesAdmin /></ProtectedRoute>} />
+          <Route path="/admin/special-pages" element={<ProtectedRoute><SpecialPagesAdmin /></ProtectedRoute>} />
           
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />

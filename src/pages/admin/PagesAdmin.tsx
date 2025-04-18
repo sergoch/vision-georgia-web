@@ -15,11 +15,19 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import PageForm from '@/components/admin/pages/PageForm';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-// Component that uses the language hook
 const PagesAdminContent = () => {
   const { isGeorgian } = useLanguage();
   const { toast } = useToast();
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [editingPage, setEditingPage] = useState<any>(null);
   
   const { data: pages, isLoading, refetch } = useQuery({
     queryKey: ['admin-pages'],
@@ -86,6 +94,12 @@ const PagesAdminContent = () => {
     }
   };
 
+  const handleFormSuccess = () => {
+    setIsAddDialogOpen(false);
+    setEditingPage(null);
+    refetch();
+  };
+
   if (isLoading) {
     return (
       <AdminLayout>
@@ -101,7 +115,7 @@ const PagesAdminContent = () => {
           <h1 className="text-3xl font-bold">
             {isGeorgian ? 'გვერდები' : 'Pages'}
           </h1>
-          <Button>
+          <Button onClick={() => setIsAddDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             {isGeorgian ? 'ახალი გვერდი' : 'New Page'}
           </Button>
@@ -137,6 +151,7 @@ const PagesAdminContent = () => {
                   <Button 
                     variant="outline" 
                     size="icon"
+                    onClick={() => setEditingPage(page)}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
@@ -152,6 +167,33 @@ const PagesAdminContent = () => {
             ))}
           </TableBody>
         </Table>
+
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>
+                {isGeorgian ? 'ახალი გვერდი' : 'New Page'}
+              </DialogTitle>
+            </DialogHeader>
+            <PageForm onSuccess={handleFormSuccess} />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={!!editingPage} onOpenChange={() => setEditingPage(null)}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>
+                {isGeorgian ? 'გვერდის რედაქტირება' : 'Edit Page'}
+              </DialogTitle>
+            </DialogHeader>
+            {editingPage && (
+              <PageForm 
+                initialData={editingPage} 
+                onSuccess={handleFormSuccess} 
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );

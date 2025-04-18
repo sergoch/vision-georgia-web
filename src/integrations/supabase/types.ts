@@ -102,6 +102,45 @@ export type Database = {
         }
         Relationships: []
       }
+      special_pages: {
+        Row: {
+          content_en: string
+          content_ka: string
+          hero_subtitle_en: string | null
+          hero_subtitle_ka: string | null
+          hero_title_en: string
+          hero_title_ka: string
+          id: string
+          meta_description_en: string | null
+          meta_description_ka: string | null
+          updated_at: string
+        }
+        Insert: {
+          content_en: string
+          content_ka: string
+          hero_subtitle_en?: string | null
+          hero_subtitle_ka?: string | null
+          hero_title_en: string
+          hero_title_ka: string
+          id: string
+          meta_description_en?: string | null
+          meta_description_ka?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content_en?: string
+          content_ka?: string
+          hero_subtitle_en?: string | null
+          hero_subtitle_ka?: string | null
+          hero_title_en?: string
+          hero_title_ka?: string
+          id?: string
+          meta_description_en?: string | null
+          meta_description_ka?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
