@@ -30,6 +30,69 @@ export type Database = {
         }
         Relationships: []
       }
+      analytics_settings: {
+        Row: {
+          created_at: string
+          id: string
+          is_enabled: boolean
+          tracking_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          tracking_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_enabled?: boolean
+          tracking_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ceo_info: {
+        Row: {
+          bio_en: string
+          bio_ka: string
+          created_at: string
+          id: string
+          image_url: string | null
+          name_en: string
+          name_ka: string
+          title_en: string
+          title_ka: string
+          updated_at: string
+        }
+        Insert: {
+          bio_en: string
+          bio_ka: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name_en: string
+          name_ka: string
+          title_en: string
+          title_ka: string
+          updated_at?: string
+        }
+        Update: {
+          bio_en?: string
+          bio_ka?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          name_en?: string
+          name_ka?: string
+          title_en?: string
+          title_ka?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_info: {
         Row: {
           content_en: Json
