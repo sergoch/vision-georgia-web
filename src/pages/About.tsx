@@ -4,6 +4,24 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+// Helper type for content
+type AboutContent = {
+  paragraph1: string;
+  paragraph2: string;
+  paragraph3: string;
+  paragraph4: string;
+  quality: string;
+  innovation: string;
+  professionalism: string;
+  timeliness: string;
+  coreValues: string;
+  quality_title: string;
+  innovation_title: string;
+  professionalism_title: string;
+  timeliness_title: string;
+  [key: string]: string;
+};
+
 const About: React.FC = () => {
   const { t, isGeorgian } = useLanguage();
 
@@ -32,7 +50,8 @@ const About: React.FC = () => {
     );
   }
 
-  const content = isGeorgian ? aboutData?.content_ka : aboutData?.content_en;
+  // Cast the JSON content to our helper type
+  const content = (isGeorgian ? aboutData?.content_ka : aboutData?.content_en) as AboutContent;
 
   return (
     <div className="pt-24 pb-16 bg-rvision-blue min-h-screen">

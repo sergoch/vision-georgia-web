@@ -19,6 +19,21 @@ const AboutAdminContent = () => {
         .single();
       
       if (error) throw error;
+      
+      // Parse JSON content if it's returned as strings
+      if (data) {
+        return {
+          id: data.id,
+          content_en: typeof data.content_en === 'string' 
+            ? JSON.parse(data.content_en) 
+            : data.content_en,
+          content_ka: typeof data.content_ka === 'string'
+            ? JSON.parse(data.content_ka)
+            : data.content_ka,
+          updated_at: data.updated_at
+        };
+      }
+      
       return data;
     },
   });

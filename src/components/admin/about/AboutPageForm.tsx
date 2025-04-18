@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { Json } from '@/integrations/supabase/types';
 
 interface AboutPageFormProps {
   initialData?: {
@@ -18,36 +19,8 @@ interface AboutPageFormProps {
 }
 
 type FormValues = {
-  content_en: {
-    paragraph1: string;
-    paragraph2: string;
-    paragraph3: string;
-    paragraph4: string;
-    quality: string;
-    innovation: string;
-    professionalism: string;
-    timeliness: string;
-    coreValues: string;
-    quality_title: string;
-    innovation_title: string;
-    professionalism_title: string;
-    timeliness_title: string;
-  };
-  content_ka: {
-    paragraph1: string;
-    paragraph2: string;
-    paragraph3: string;
-    paragraph4: string;
-    quality: string;
-    innovation: string;
-    professionalism: string;
-    timeliness: string;
-    coreValues: string;
-    quality_title: string;
-    innovation_title: string;
-    professionalism_title: string;
-    timeliness_title: string;
-  };
+  content_en: Record<string, string>;
+  content_ka: Record<string, string>;
 };
 
 const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
@@ -55,7 +28,7 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const defaultValues = {
+  const defaultValues: FormValues = {
     content_en: initialData?.content_en || {},
     content_ka: initialData?.content_ka || {},
   };
@@ -64,7 +37,7 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
     defaultValues,
   });
 
-  const { mutate: updateAboutPage, isLoading } = useMutation({
+  const { mutate: updateAboutPage, isPending } = useMutation({
     mutationFn: async (data: FormValues) => {
       const { error } = await supabase
         .from('about_page')
@@ -95,6 +68,9 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
     updateAboutPage(data);
   };
 
+  // Get all keys from the content objects
+  const contentFields = Object.keys(defaultValues.content_en).sort();
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -102,15 +78,15 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
           {/* English Content */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">English Content</h2>
-            {Object.keys(defaultValues.content_en).map((key) => (
+            {contentFields.map((key) => (
               <FormField
-                key={key}
+                key={`en-${key}`}
                 control={form.control}
-                name={`content_en.${key}`}
+                name={`content_en.${key}` as any}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{key}</FormLabel>
-                    <Textarea {...field} />
+                    <Textarea {...field} value={field.value as string} />
                   </FormItem>
                 )}
               />
@@ -120,15 +96,15 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
           {/* Georgian Content */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">ქართული კონტენტი</h2>
-            {Object.keys(defaultValues.content_ka).map((key) => (
+            {contentFields.map((key) => (
               <FormField
-                key={key}
+                key={`ka-${key}`}
                 control={form.control}
-                name={`content_ka.${key}`}
+                name={`content_ka.${key}` as any}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>{key}</FormLabel>
-                    <Textarea {...field} />
+                    <Textarea {...field} value={field.value as string} />
                   </FormItem>
                 )}
               />
@@ -136,8 +112,8 @@ const AboutPageForm = ({ initialData }: AboutPageFormProps) => {
           </div>
         </div>
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button type="submit" disabled={isPending}>
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {isGeorgian ? 'განახლება' : 'Update'}
         </Button>
       </form>
