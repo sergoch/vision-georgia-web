@@ -102,6 +102,45 @@ export type Database = {
         }
         Relationships: []
       }
+      services: {
+        Row: {
+          created_at: string | null
+          description_en: string
+          description_ka: string
+          full_description_en: string
+          full_description_ka: string
+          id: string
+          image_url: string
+          title_en: string
+          title_ka: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description_en: string
+          description_ka: string
+          full_description_en: string
+          full_description_ka: string
+          id?: string
+          image_url: string
+          title_en: string
+          title_ka: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description_en?: string
+          description_ka?: string
+          full_description_en?: string
+          full_description_ka?: string
+          id?: string
+          image_url?: string
+          title_en?: string
+          title_ka?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       special_pages: {
         Row: {
           content_en: string
@@ -138,6 +177,54 @@ export type Database = {
           meta_description_en?: string | null
           meta_description_ka?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      team_members: {
+        Row: {
+          bio_en: string
+          bio_ka: string
+          created_at: string | null
+          email: string | null
+          id: string
+          image_url: string
+          linkedin_url: string | null
+          name_en: string
+          name_ka: string
+          order_index: number
+          title_en: string
+          title_ka: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio_en: string
+          bio_ka: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          image_url: string
+          linkedin_url?: string | null
+          name_en: string
+          name_ka: string
+          order_index?: number
+          title_en: string
+          title_ka: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio_en?: string
+          bio_ka?: string
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          image_url?: string
+          linkedin_url?: string | null
+          name_en?: string
+          name_ka?: string
+          order_index?: number
+          title_en?: string
+          title_ka?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
