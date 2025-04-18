@@ -30,6 +30,27 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_info: {
+        Row: {
+          content_en: Json
+          content_ka: Json
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          content_en: Json
+          content_ka: Json
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          content_en?: Json
+          content_ka?: Json
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           content_en: string

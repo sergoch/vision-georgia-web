@@ -1,22 +1,48 @@
-
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '../integrations/supabase/client';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Mail, Phone, MapPin } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const { isGeorgian } = useLanguage();
 
+  const { data: contactData, isLoading } = useQuery({
+    queryKey: ['contact-page-data'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('contact_info')
+        .select('*')
+        .single();
+      
+      if (error) throw error;
+
+      // Ensure the content is parsed if it's a string
+      return {
+        content_en: typeof data.content_en === 'string' 
+          ? JSON.parse(data.content_en) 
+          : data.content_en,
+        content_ka: typeof data.content_ka === 'string'
+          ? JSON.parse(data.content_ka)
+          : data.content_ka
+      };
+    },
+  });
+
+  if (isLoading) return null;
+
+  // Use either English or Georgian content based on language
+  const content = isGeorgian ? contactData.content_ka : contactData.content_en;
+
   return (
     <div className="pt-24 pb-16 bg-rvision-blue min-h-screen">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 text-center">
-            {isGeorgian ? 'დაგვიკავშირდით' : 'Contact Us'}
+            {content.page_title}
           </h1>
           <p className="text-gray-300 text-lg mb-16 max-w-3xl mx-auto text-center">
-            {isGeorgian 
-              ? 'გაქვთ კითხვები ან გჭირდებათ დამატებითი ინფორმაცია? დაგვიკავშირდით დღეს.'
-              : 'Have questions or need additional information? Get in touch with us today.'}
+            {content.page_description}
           </p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -24,7 +50,7 @@ const Contact: React.FC = () => {
             <div className="lg:col-span-1">
               <div className="bg-white/5 backdrop-blur-sm p-8 rounded-lg border border-white/10">
                 <h2 className="text-2xl font-semibold text-white mb-6">
-                  {isGeorgian ? 'საკონტაქტო ინფორმაცია' : 'Contact Information'}
+                  {content.contact_info_title}
                 </h2>
                 
                 <div className="space-y-6">
@@ -32,10 +58,10 @@ const Contact: React.FC = () => {
                     <MapPin className="text-rvision-orange mr-4 mt-1" size={20} />
                     <div>
                       <h3 className="text-white font-medium mb-1">
-                        {isGeorgian ? 'მისამართი' : 'Address'}
+                        {content.address_label}
                       </h3>
                       <p className="text-gray-300">
-                        {isGeorgian ? 'თამარ მეფის გამზირი #15, ბათუმი 6000' : '15 Tamar Mepe Ave, Batumi 6000'}
+                        {content.address}
                       </p>
                     </div>
                   </div>
@@ -44,10 +70,10 @@ const Contact: React.FC = () => {
                     <Mail className="text-rvision-orange mr-4 mt-1" size={20} />
                     <div>
                       <h3 className="text-white font-medium mb-1">
-                        {isGeorgian ? 'ელ-ფოსტა' : 'Email'}
+                        {content.email_label}
                       </h3>
-                      <a href="mailto:info@rvision.ge" className="text-gray-300 hover:text-rvision-orange transition-colors">
-                        info@rvision.ge
+                      <a href={`mailto:${content.email}`} className="text-gray-300 hover:text-rvision-orange transition-colors">
+                        {content.email}
                       </a>
                     </div>
                   </div>
@@ -56,10 +82,10 @@ const Contact: React.FC = () => {
                     <Phone className="text-rvision-orange mr-4 mt-1" size={20} />
                     <div>
                       <h3 className="text-white font-medium mb-1">
-                        {isGeorgian ? 'ტელეფონი' : 'Phone'}
+                        {content.phone_label}
                       </h3>
-                      <a href="tel:+995322000000" className="text-gray-300 hover:text-rvision-orange transition-colors">
-                        +995 322 00 00 00
+                      <a href={`tel:${content.phone}`} className="text-gray-300 hover:text-rvision-orange transition-colors">
+                        {content.phone}
                       </a>
                     </div>
                   </div>
@@ -67,16 +93,16 @@ const Contact: React.FC = () => {
 
                 <div className="mt-8 pt-8 border-t border-white/10">
                   <h3 className="text-white font-medium mb-3">
-                    {isGeorgian ? 'კომპანიის რეკვიზიტები' : 'Company Details'}
+                    {content.company_details_title}
                   </h3>
                   <p className="text-gray-300 mb-2">
-                    {isGeorgian ? 'საიდენტიფიკაციო კოდი: 445684536' : 'Company ID: 445684536'}
+                    {content.company_id_label}: {content.company_id}
                   </p>
                   <p className="text-gray-300 mb-2">
-                    {isGeorgian ? 'ბანკის კოდი: BAGAGE22' : 'Bank Code: BAGAGE22'}
+                    {content.bank_code_label}: {content.bank_code}
                   </p>
                   <p className="text-gray-300">
-                    {isGeorgian ? 'ანგარიში #: GE08BG0000000541535273' : 'Account #: GE08BG0000000541535273'}
+                    {content.account_number_label}: {content.account_number}
                   </p>
                 </div>
               </div>
@@ -131,7 +157,7 @@ const Contact: React.FC = () => {
                     <textarea 
                       rows={5}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-md focus:outline-none focus:border-rvision-orange/70 text-white"
-                      placeholder={isGeorgian ? 'თქვენი შეტყობინება' : 'Your message'}
+                      placeholder={isGeorgian ? 'თქვენი შეტყობი��ება' : 'Your message'}
                     />
                   </div>
 
@@ -149,7 +175,7 @@ const Contact: React.FC = () => {
           {/* Map */}
           <div className="mt-16">
             <h2 className="text-2xl font-semibold text-white mb-6">
-              {isGeorgian ? 'ჩვენი მდებარეობა' : 'Our Location'}
+              {content.location_title}
             </h2>
             
             <div className="w-full h-96 rounded-lg overflow-hidden border border-white/10">
