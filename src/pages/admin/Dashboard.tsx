@@ -1,8 +1,9 @@
 
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 
-const Dashboard = () => {
+// Component that uses the language hook
+const DashboardContent = () => {
   const { isGeorgian } = useLanguage();
 
   return (
@@ -39,6 +40,15 @@ const Dashboard = () => {
         </div>
       </div>
     </AdminLayout>
+  );
+};
+
+// Main Dashboard component that provides the language context
+const Dashboard = () => {
+  return (
+    <LanguageProvider>
+      <DashboardContent />
+    </LanguageProvider>
   );
 };
 

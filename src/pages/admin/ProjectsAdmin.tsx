@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import {
@@ -15,7 +15,8 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
-const ProjectsAdmin = () => {
+// Component that uses the language hook
+const ProjectsAdminContent = () => {
   const { isGeorgian } = useLanguage();
   
   const { data: projects, isLoading } = useQuery({
@@ -81,6 +82,15 @@ const ProjectsAdmin = () => {
         </Table>
       </div>
     </AdminLayout>
+  );
+};
+
+// Main ProjectsAdmin component that provides the language context
+const ProjectsAdmin = () => {
+  return (
+    <LanguageProvider>
+      <ProjectsAdminContent />
+    </LanguageProvider>
   );
 };
 

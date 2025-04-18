@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import {
@@ -13,7 +13,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const ServicesAdmin = () => {
+// Component that uses the language hook
+const ServicesAdminContent = () => {
   const { isGeorgian } = useLanguage();
 
   return (
@@ -43,6 +44,15 @@ const ServicesAdmin = () => {
         </Table>
       </div>
     </AdminLayout>
+  );
+};
+
+// Main ServicesAdmin component that provides the language context
+const ServicesAdmin = () => {
+  return (
+    <LanguageProvider>
+      <ServicesAdminContent />
+    </LanguageProvider>
   );
 };
 
