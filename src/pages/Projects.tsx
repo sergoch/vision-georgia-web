@@ -1,6 +1,9 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const Projects: React.FC = () => {
   const { t, isGeorgian } = useLanguage();
@@ -13,62 +16,17 @@ const Projects: React.FC = () => {
     { id: 'mapping', name: isGeorgian ? 'კარტოგრაფირება' : 'Mapping' },
   ];
 
-  const projects = [
-    {
-      id: 1,
-      title: isGeorgian ? 'ბათუმის 3D რუკა' : '3D Map of Batumi',
-      category: 'gis',
-      image: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'ბათუმის დეტალური 3D რუკისა და სივრცითი მოდელის შექმნა ურბანული დაგეგმარებისთვის.'
-        : 'Creation of a detailed 3D map and spatial model of Batumi for urban planning purposes.'
+  const { data: projects = [], isLoading } = useQuery({
+    queryKey: ['projects'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*');
+      
+      if (error) throw error;
+      return data;
     },
-    {
-      id: 2,
-      title: isGeorgian ? 'საავტომობილო გზის ტოპოგრაფიული კვლევა' : 'Highway Topographic Survey',
-      category: 'mapping',
-      image: 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'ახალი საავტომობილო გზის მარშრუტის ტოპოგრაფიული კვლევა და რუკების შექმნა.'
-        : 'Topographic survey and mapping of a new highway route.'
-    },
-    {
-      id: 3,
-      title: isGeorgian ? 'დრონით LIDAR სკანირება' : 'Drone LIDAR Scanning',
-      category: 'drone',
-      image: 'https://images.unsplash.com/photo-1487887235947-a955ef187fcc?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'LIDAR ტექნოლოგიის გამოყენებით დრონით სკანირება მიწის ზუსტი 3D მოდელის შესაქმნელად.'
-        : 'Drone scanning using LIDAR technology to create an accurate 3D model of the terrain.'
-    },
-    {
-      id: 4,
-      title: isGeorgian ? 'GIS ვებ-აპლიკაცია' : 'GIS Web Application',
-      category: 'gis',
-      image: 'https://images.unsplash.com/photo-1602992708529-c9fdb12905c9?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'ინტერაქტიული GIS ვებ-აპლიკაციის შექმნა ქალაქის დაგეგმარებისა და განვითარებისთვის.'
-        : 'Development of an interactive GIS web application for city planning and development.'
-    },
-    {
-      id: 5,
-      title: isGeorgian ? 'მდინარის აუზის კარტოგრაფირება' : 'River Basin Mapping',
-      category: 'mapping',
-      image: 'https://images.unsplash.com/photo-1505245208761-ba872912fac0?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'მდინარის აუზის დეტალური კარტოგრაფირება და წყლის რესურსების მართვის გეგმების შემუშავება.'
-        : 'Detailed mapping of a river basin and development of water resource management plans.'
-    },
-    {
-      id: 6,
-      title: isGeorgian ? 'სასოფლო-სამეურნეო მიწების მონიტორინგი' : 'Agricultural Land Monitoring',
-      category: 'drone',
-      image: 'https://images.unsplash.com/photo-1562155618-e1a8bc2aaf52?auto=format&fit=crop&w=600',
-      description: isGeorgian 
-        ? 'დრონების გამოყენებით სასოფლო-სამეურნეო მიწების მონიტორინგი და ანალიზი.'
-        : 'Monitoring and analysis of agricultural lands using drones.'
-    },
-  ];
+  });
 
   const filteredProjects = activeCategory === 'all' 
     ? projects 
@@ -100,39 +58,51 @@ const Projects: React.FC = () => {
           </div>
 
           {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map(project => (
-              <div 
-                key={project.id}
-                className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden group hover:border-rvision-orange/50 transition-all"
-              >
-                <div className="relative overflow-hidden h-64">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute top-4 right-4 bg-rvision-orange/90 text-white text-xs font-semibold py-1 px-3 rounded-full">
-                    {categories.find(cat => cat.id === project.category)?.name}
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="animate-pulse">
+                  <div className="bg-white/5 h-64 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-white/5 rounded w-3/4 mb-2"></div>
+                  <div className="h-20 bg-white/5 rounded"></div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.map(project => (
+                <div 
+                  key={project.id}
+                  className="bg-white/5 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden group hover:border-rvision-orange/50 transition-all"
+                >
+                  <div className="relative overflow-hidden h-64">
+                    <img 
+                      src={project.image_url} 
+                      alt={isGeorgian ? project.title_ka : project.title_en}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute top-4 right-4 bg-rvision-orange/90 text-white text-xs font-semibold py-1 px-3 rounded-full">
+                      {categories.find(cat => cat.id === project.category)?.name}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-white mb-3">
+                      {isGeorgian ? project.title_ka : project.title_en}
+                    </h3>
+                    <p className="text-gray-300 mb-4">
+                      {isGeorgian ? project.description_ka : project.description_en}
+                    </p>
+                    <Link 
+                      to={`/projects/${project.id}`}
+                      className="inline-block text-rvision-orange hover:underline text-sm font-medium mt-2"
+                    >
+                      {isGeorgian ? 'პროექტის დეტალები' : 'Project Details'}
+                    </Link>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-white mb-3">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-300 mb-4">
-                    {project.description}
-                  </p>
-                  <a 
-                    href="#" 
-                    className="inline-block text-rvision-orange hover:underline text-sm font-medium mt-2"
-                  >
-                    {isGeorgian ? 'პროექტის დეტალები' : 'Project Details'}
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* More Projects CTA */}
           <div className="text-center mt-16">
@@ -141,12 +111,12 @@ const Projects: React.FC = () => {
                 ? 'დაინტერესებული ხართ მსგავსი პროექტით? დაგვიკავშირდით დღესვე.'
                 : 'Interested in a similar project? Contact us today.'}
             </p>
-            <a 
-              href="/contact" 
+            <Link 
+              to="/contact" 
               className="inline-block bg-rvision-orange hover:bg-rvision-orange/90 text-white font-semibold py-3 px-8 rounded-md transition-colors"
             >
               {isGeorgian ? 'დაგვიკავშირდით' : 'Contact Us'}
-            </a>
+            </Link>
           </div>
         </div>
       </div>
