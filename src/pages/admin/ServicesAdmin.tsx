@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import {
