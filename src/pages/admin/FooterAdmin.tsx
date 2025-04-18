@@ -23,8 +23,8 @@ const FooterAdminContent = () => {
         .select('*')
         .single();
       
-      if (error && error.code !== 'PGRST116') throw error; // Not found is OK for first run
-      return data || null;
+      if (error) throw error;
+      return data;
     },
   });
 
@@ -49,38 +49,20 @@ const FooterAdminContent = () => {
   useEffect(() => {
     if (footerData) {
       setFormData({
-        company_name_en: footerData.company_name_en || '',
-        company_name_ka: footerData.company_name_ka || '',
-        company_id: footerData.company_id || '',
-        address_en: footerData.address_en || '',
-        address_ka: footerData.address_ka || '',
-        email: footerData.email || '',
-        phone: footerData.phone || '',
-        bank_code_en: footerData.bank_code_en || '',
-        bank_code_ka: footerData.bank_code_ka || '',
-        account_number_en: footerData.account_number_en || '',
-        account_number_ka: footerData.account_number_ka || '',
-        facebook_url: footerData.facebook_url || '',
-        twitter_url: footerData.twitter_url || '',
-        instagram_url: footerData.instagram_url || '',
-      });
-    } else {
-      // Default values for new footer
-      setFormData({
-        company_name_en: 'Real Vision LLC',
-        company_name_ka: 'შპს „რეალ ვიჟენი"',
-        company_id: '445684536',
-        address_en: 'Tamar Mepe Avenue #15, Batumi 6000',
-        address_ka: 'თამარ მეფის გამზირი #15, ბათუმი 6000',
-        email: 'info@rvision.ge',
-        phone: '+995 322 00 00 00',
-        bank_code_en: 'BAGAGE22',
-        bank_code_ka: 'BAGAGE22',
-        account_number_en: 'GE08BG0000000541535273',
-        account_number_ka: 'GE08BG0000000541535273',
-        facebook_url: 'https://facebook.com',
-        twitter_url: 'https://twitter.com',
-        instagram_url: 'https://instagram.com',
+        company_name_en: footerData.company_name_en,
+        company_name_ka: footerData.company_name_ka,
+        company_id: footerData.company_id,
+        address_en: footerData.address_en,
+        address_ka: footerData.address_ka,
+        email: footerData.email,
+        phone: footerData.phone,
+        bank_code_en: footerData.bank_code_en,
+        bank_code_ka: footerData.bank_code_ka,
+        account_number_en: footerData.account_number_en,
+        account_number_ka: footerData.account_number_ka,
+        facebook_url: footerData.facebook_url,
+        twitter_url: footerData.twitter_url,
+        instagram_url: footerData.instagram_url,
       });
     }
   }, [footerData]);
@@ -97,54 +79,28 @@ const FooterAdminContent = () => {
     e.preventDefault();
     
     try {
-      let result;
-      
-      if (footerData?.id) {
-        // Update existing footer
-        result = await supabase
-          .from('footer')
-          .update({
-            company_name_en: formData.company_name_en,
-            company_name_ka: formData.company_name_ka,
-            company_id: formData.company_id,
-            address_en: formData.address_en,
-            address_ka: formData.address_ka,
-            email: formData.email,
-            phone: formData.phone,
-            bank_code_en: formData.bank_code_en,
-            bank_code_ka: formData.bank_code_ka,
-            account_number_en: formData.account_number_en,
-            account_number_ka: formData.account_number_ka,
-            facebook_url: formData.facebook_url,
-            twitter_url: formData.twitter_url,
-            instagram_url: formData.instagram_url,
-          })
-          .eq('id', footerData.id)
-          .select();
-      } else {
-        // Insert new footer
-        result = await supabase
-          .from('footer')
-          .insert({
-            company_name_en: formData.company_name_en,
-            company_name_ka: formData.company_name_ka,
-            company_id: formData.company_id,
-            address_en: formData.address_en,
-            address_ka: formData.address_ka,
-            email: formData.email,
-            phone: formData.phone,
-            bank_code_en: formData.bank_code_en,
-            bank_code_ka: formData.bank_code_ka,
-            account_number_en: formData.account_number_en,
-            account_number_ka: formData.account_number_ka,
-            facebook_url: formData.facebook_url,
-            twitter_url: formData.twitter_url,
-            instagram_url: formData.instagram_url,
-          })
-          .select();
-      }
+      // Update the footer row 
+      const { error } = await supabase
+        .from('footer')
+        .update({
+          company_name_en: formData.company_name_en,
+          company_name_ka: formData.company_name_ka,
+          company_id: formData.company_id,
+          address_en: formData.address_en,
+          address_ka: formData.address_ka,
+          email: formData.email,
+          phone: formData.phone,
+          bank_code_en: formData.bank_code_en,
+          bank_code_ka: formData.bank_code_ka,
+          account_number_en: formData.account_number_en,
+          account_number_ka: formData.account_number_ka,
+          facebook_url: formData.facebook_url,
+          twitter_url: formData.twitter_url,
+          instagram_url: formData.instagram_url,
+        })
+        .eq('id', footerData.id);  // Make sure to update the correct row
 
-      if (result.error) throw result.error;
+      if (error) throw error;
 
       toast({
         description: isGeorgian ? 'ფუტერი წარმატებით განახლდა' : 'Footer updated successfully',

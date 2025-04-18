@@ -51,6 +51,63 @@ export type Database = {
         }
         Relationships: []
       }
+      footer: {
+        Row: {
+          account_number_en: string
+          account_number_ka: string
+          address_en: string
+          address_ka: string
+          bank_code_en: string
+          bank_code_ka: string
+          company_id: string
+          company_name_en: string
+          company_name_ka: string
+          email: string
+          facebook_url: string
+          id: string
+          instagram_url: string
+          phone: string
+          twitter_url: string
+          updated_at: string
+        }
+        Insert: {
+          account_number_en: string
+          account_number_ka: string
+          address_en: string
+          address_ka: string
+          bank_code_en: string
+          bank_code_ka: string
+          company_id: string
+          company_name_en: string
+          company_name_ka: string
+          email: string
+          facebook_url: string
+          id?: string
+          instagram_url: string
+          phone: string
+          twitter_url: string
+          updated_at?: string
+        }
+        Update: {
+          account_number_en?: string
+          account_number_ka?: string
+          address_en?: string
+          address_ka?: string
+          bank_code_en?: string
+          bank_code_ka?: string
+          company_id?: string
+          company_name_en?: string
+          company_name_ka?: string
+          email?: string
+          facebook_url?: string
+          id?: string
+          instagram_url?: string
+          phone?: string
+          twitter_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       home_page: {
         Row: {
           contact_description_en: string
