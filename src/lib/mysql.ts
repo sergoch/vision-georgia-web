@@ -1,4 +1,6 @@
 
+// Note: This file should only be imported by server-side code
+// It will not work in the browser
 import mysql from 'mysql2/promise';
 
 export const pool = mysql.createPool({

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -11,12 +12,20 @@ import { LogIn } from 'lucide-react';
 
 const Home: React.FC = () => {
   const { isGeorgian } = useLanguage();
-  const { homePageData, services, isLoading } = useHomeData();
+  const { homePageData, services, isLoading, error } = useHomeData();
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div>{isGeorgian ? 'იტვირთება...' : 'Loading...'}</div>
+      </div>
+    );
+  }
+
+  if (error || !homePageData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>{isGeorgian ? 'შეცდომა მონაცემების ჩატვირთვისას' : 'Error loading data'}</div>
       </div>
     );
   }
