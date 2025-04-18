@@ -1,8 +1,6 @@
 
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { TeamMemberBasicFields } from './TeamMemberBasicFields';
 import { TeamMemberBioFields } from './TeamMemberBioFields';
@@ -34,16 +32,6 @@ const TeamMemberForm = ({ initialData, onSuccess, onCancel }: TeamMemberFormProp
       <TeamMemberBasicFields register={register} errors={errors} />
       <TeamMemberBioFields register={register} errors={errors} />
       <TeamMemberContactFields register={register} />
-      
-      <div className="space-y-2">
-        <Label htmlFor="order_index">Display Order</Label>
-        <Input 
-          id="order_index"
-          type="number"
-          {...register('order_index', { valueAsNumber: true })}
-        />
-      </div>
-      
       <TeamMemberImageUpload
         imagePreview={imagePreview}
         onImageChange={handleImageChange}
