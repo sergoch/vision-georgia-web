@@ -51,6 +51,69 @@ export type Database = {
         }
         Relationships: []
       }
+      home_page: {
+        Row: {
+          contact_description_en: string
+          contact_description_ka: string
+          contact_title_en: string
+          contact_title_ka: string
+          hero_image_url: string | null
+          hero_subtitle_en: string
+          hero_subtitle_ka: string
+          hero_title_en: string
+          hero_title_ka: string
+          id: string
+          projects_description_en: string
+          projects_description_ka: string
+          projects_image_url: string | null
+          projects_title_en: string
+          projects_title_ka: string
+          services_title_en: string
+          services_title_ka: string
+          updated_at: string
+        }
+        Insert: {
+          contact_description_en: string
+          contact_description_ka: string
+          contact_title_en: string
+          contact_title_ka: string
+          hero_image_url?: string | null
+          hero_subtitle_en: string
+          hero_subtitle_ka: string
+          hero_title_en: string
+          hero_title_ka: string
+          id?: string
+          projects_description_en: string
+          projects_description_ka: string
+          projects_image_url?: string | null
+          projects_title_en: string
+          projects_title_ka: string
+          services_title_en: string
+          services_title_ka: string
+          updated_at?: string
+        }
+        Update: {
+          contact_description_en?: string
+          contact_description_ka?: string
+          contact_title_en?: string
+          contact_title_ka?: string
+          hero_image_url?: string | null
+          hero_subtitle_en?: string
+          hero_subtitle_ka?: string
+          hero_title_en?: string
+          hero_title_ka?: string
+          id?: string
+          projects_description_en?: string
+          projects_description_ka?: string
+          projects_image_url?: string | null
+          projects_title_en?: string
+          projects_title_ka?: string
+          services_title_en?: string
+          services_title_ka?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           content_en: string

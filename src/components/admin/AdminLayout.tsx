@@ -8,7 +8,8 @@ import {
   LogOut, 
   Users, 
   BookOpen,
-  Phone
+  Phone,
+  Home
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -47,6 +48,14 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           </SidebarHeader>
           <SidebarContent>
             <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/admin/home" className="w-full">
+                    <Home />
+                    <span>{isGeorgian ? 'მთავარი გვერდი' : 'Home Page'}</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <a href="/admin" className="w-full">
