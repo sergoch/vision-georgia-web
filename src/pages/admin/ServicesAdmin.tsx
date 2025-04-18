@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage, LanguageProvider } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
 import {
@@ -27,7 +26,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import ServiceForm from '@/components/admin/services/ServiceForm';
 
-const ServicesAdmin = () => {
+// Separate content component that uses the language hook
+const ServicesAdminContent = () => {
   const { isGeorgian } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
@@ -266,6 +266,15 @@ const ServicesAdmin = () => {
         </AlertDialog>
       </div>
     </AdminLayout>
+  );
+};
+
+// Main ServicesAdmin component that provides the language context
+const ServicesAdmin = () => {
+  return (
+    <LanguageProvider>
+      <ServicesAdminContent />
+    </LanguageProvider>
   );
 };
 
