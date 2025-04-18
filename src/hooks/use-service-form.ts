@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -27,7 +27,7 @@ export const useServiceForm = (
   const { isGeorgian } = useLanguage();
   
   const form = useForm<ServiceFormData>({
-    defaultValues: initialData || {
+    defaultValues: {
       title_en: '',
       title_ka: '',
       description_en: '',
@@ -36,6 +36,24 @@ export const useServiceForm = (
       full_description_ka: ''
     }
   });
+
+  // Load initial data when editing
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        title_en: initialData.title_en || '',
+        title_ka: initialData.title_ka || '',
+        description_en: initialData.description_en || '',
+        description_ka: initialData.description_ka || '',
+        full_description_en: initialData.full_description_en || '',
+        full_description_ka: initialData.full_description_ka || ''
+      });
+      
+      if (initialData.image_url) {
+        setImagePreview(initialData.image_url);
+      }
+    }
+  }, [initialData, form]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
