@@ -92,6 +92,7 @@ export const useServiceForm = (
       };
       
       if (initialData) {
+        // Update existing service
         const { error } = await supabase
           .from('services')
           .update({
@@ -102,6 +103,7 @@ export const useServiceForm = (
           
         if (error) throw error;
       } else {
+        // Create new service
         const { error } = await supabase
           .from('services')
           .insert([{
