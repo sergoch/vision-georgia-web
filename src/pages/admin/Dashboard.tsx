@@ -1,60 +1,44 @@
 
-import React from 'react';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import AdminLayout from '@/components/admin/AdminLayout';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Dashboard = () => {
   const { isGeorgian } = useLanguage();
-  const { toast } = useToast();
-  const navigate = useNavigate();
-
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: isGeorgian ? 'შეცდომა' : 'Error',
-        description: error.message
-      });
-    } else {
-      navigate('/auth');
-    }
-  };
 
   return (
-    <div className="pt-24 pb-16 min-h-screen bg-rvision-blue">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">
-            {isGeorgian ? 'ადმინ პანელი' : 'Admin Dashboard'}
-          </h1>
-          <Button variant="secondary" onClick={handleSignOut}>
-            {isGeorgian ? 'გამოსვლა' : 'Sign Out'}
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+    <AdminLayout>
+      <div className="space-y-6">
+        <h1 className="text-3xl font-bold">
+          {isGeorgian ? 'მთავარი დაფა' : 'Dashboard'}
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-6 bg-card rounded-lg border">
+            <h3 className="font-semibold mb-2">
               {isGeorgian ? 'პროექტების მართვა' : 'Manage Projects'}
-            </h2>
-            <Button variant="outline" className="w-full" onClick={() => navigate('/admin/projects')}>
-              {isGeorgian ? 'პროექტები' : 'Projects'}
-            </Button>
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {isGeorgian ? 'დაამატეთ, წაშალეთ და შეცვალეთ პროექტები' : 'Add, remove and edit projects'}
+            </p>
           </div>
-          <div className="bg-white/5 backdrop-blur-sm p-6 rounded-lg border border-white/10">
-            <h2 className="text-xl font-semibold text-white mb-4">
+          <div className="p-6 bg-card rounded-lg border">
+            <h3 className="font-semibold mb-2">
               {isGeorgian ? 'სერვისების მართვა' : 'Manage Services'}
-            </h2>
-            <Button variant="outline" className="w-full" onClick={() => navigate('/admin/services')}>
-              {isGeorgian ? 'სერვისები' : 'Services'}
-            </Button>
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {isGeorgian ? 'დაამატეთ, წაშალეთ და შეცვალეთ სერვისები' : 'Add, remove and edit services'}
+            </p>
+          </div>
+          <div className="p-6 bg-card rounded-lg border">
+            <h3 className="font-semibold mb-2">
+              {isGeorgian ? 'პარამეტრები' : 'Settings'}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {isGeorgian ? 'მართეთ საიტის პარამეტრები' : 'Manage website settings'}
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
